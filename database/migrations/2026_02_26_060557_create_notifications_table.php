@@ -19,7 +19,6 @@ return new class extends Migration
             $table->enum('type', ['pangkat', 'gaji_berlkala', 'pensiun']);
             $table->string('title');
             $table->text('message');
-            $table->boolean('is_read');
             $table->boolean('is_read')->default(false);
             $table->timestamps();
         });

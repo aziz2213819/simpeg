@@ -34,7 +34,6 @@ return new class extends Migration
                 ->constrained('positions')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-
             
             $table->timestamps();
         });
