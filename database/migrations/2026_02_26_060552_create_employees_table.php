@@ -16,16 +16,18 @@ return new class extends Migration
             $table->string('nip')->unique();
             $table->string('name');
             $table->date('birth_date')->nullable();
-            $table->string('gender', 10)->nullable();
-            $table->text('address')->nullable();
+            $table->enum('gender', ['laki-laki', 'perempuan'])->nullable();
+            $table->string('status');
 
             // RELASI
             $table->foreignId('grade_id')
+                ->nullable()
                 ->constrained('grades')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-
+            
             $table->foreignId('rank_id')
+                ->nullable()
                 ->constrained('ranks')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
