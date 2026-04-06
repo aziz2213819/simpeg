@@ -16,13 +16,24 @@ class EnsureGuestDataExists
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $except = [
+            'masuk',        // URL /masuk
+            'login',        // URL /login (bawaan starter kit)
+            'register',     // URL /register (jika ada)
+        ];
+
+        if ($request->is($except)) {
+            return $next($request);
+        }
+
         $name = Cookie::get('guest_name');
         $address = Cookie::get('guest_address');
 
         if (!$name || !$address) {
             return redirect()->route('tamu.masukForm')
-            ->with('error', 'Silakan isi data diri Anda terlebih dahulu.');
+                ->with('error', 'Silakan isi data diri Anda terlebih dahulu.');
         }
+
         return $next($request);
     }
 }

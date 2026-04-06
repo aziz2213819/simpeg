@@ -4,7 +4,7 @@
 
         @if (session('error'))
             <div class="text-center font-medium text-sm text-red-600">
-                {{ session('error') }}
+                {{ session('error') }} 
             </div>
         @endif
 
