@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -38,8 +39,14 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::authenticateUsing(function ($request) {
         $user = User::where('email', $request->email)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            return $user;
+        try {
+            if ($user && Hash::check($request->password, $user->password)) {
+                return $user;
+            }
+        } catch (RuntimeException $e) {
+            throw ValidationException::withMessages([
+                Fortify::username() => 'Maaf, email atau password salah.',
+            ]);
         }
 
         throw ValidationException::withMessages([

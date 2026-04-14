@@ -9,7 +9,7 @@
             @csrf
 
             <!-- Email Address -->
-            <flux:input name="email" :label="__('Email address')" :value="old('email')" type="email" required autofocus
+            <flux:input name="email" :label="__('Alamat Email')" :value="old('email')" type="email" required autofocus
                 autocomplete="email" placeholder="email@contoh.com" />
 
             <!-- Password -->

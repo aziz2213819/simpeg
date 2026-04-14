@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -12,21 +13,21 @@ use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
 
 class PegawaiController extends Controller
 {
-    public function index() {
-        $user = auth()->user();
+    public function index()
+    {
+        $user = Auth::user();
         return view('pegawai.dashboard', compact('user'));
     }
 
     public function profile()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         return view('pegawai.settings.profile', compact('user'));
     }
 
     public function updateEmail(Request $request)
     {
-        $user = auth()->user();
-
+        $user = Auth::user();
         $validated = $request->validate([
             'email' => [
                 'required',
@@ -51,7 +52,7 @@ class PegawaiController extends Controller
 
     public function password()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         return view('pegawai.settings.password', compact('user'));
     }
 
@@ -76,7 +77,7 @@ class PegawaiController extends Controller
     }
 
     public function duafaktor() {
-        $user = auth()->user();
+        $user = Auth::user();
         return view('pegawai.settings.two-factor', compact('user'));
     }
 
@@ -109,9 +110,17 @@ class PegawaiController extends Controller
         return back()->with('status', '2fa-confirmed');
     }
 
+    public function tampilan()
+    {
+        $user = Auth::user();
+        return view('pegawai.settings.tampilan', compact('user'));
+    }
+
+    
+
     public function notification()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         return view('pegawai.settings.notifikasi', compact('user'));
     }
 }

@@ -1,5 +1,7 @@
 <div class="p-6 space-y-6">
 
+    <x-managed-message />
+
     <flux:card>
 
         {{-- Header --}}

@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => IsAdmin::class,
-            'guest' => EnsureGuestDataExists::class
+            'tamu.cek' => EnsureGuestDataExists::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

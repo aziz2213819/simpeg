@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\TamuController;
 use App\Livewire\GradeLive;
@@ -11,18 +13,20 @@ Route::view('/', 'welcome')->name('home');
 Route::get('/masuk', [TamuController::class, 'masukForm'])->name('tamu.masukForm');
 Route::post('/masuk', [TamuController::class, 'masuk'])->name('tamu.masuk');
 
-Route::middleware(['guest'])->group(function () {
+Route::middleware(['tamu.cek'])->group(function () {
     Route::get('/tamu', [TamuController::class, 'index'])->name('tamu.index');
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
     // admin
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-    
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    // Route::view('/dashboard', 'dashboard')->name('dashboard');
+
     Route::prefix("admin")->group(function () {
         Route::get('/golongan', GradeLive::class)->name('golongan.index');
         Route::get('/jabatan', PositionLive::class)->name('jabatan.index');
         Route::get('/pangkat', RankLive::class)->name('pangkat.index');
+        Route::resource('pegawai', EmployeeController::class);
     });
 });
     
@@ -30,7 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/homepage', [PegawaiController::class, 'index'])->name('pegawai.homepage');
     Route::get('/profil', [PegawaiController::class, 'profile'])->name('pegawai.profil');
     Route::get('/password', [PegawaiController::class, 'password'])->name('pegawai.password');
-    Route::get('/duafaktor', [PegawaiController::class, 'duafaktor'])->name('pegawai.duafaktor');
+    Route::get('/duafaktor', [PegawaiController::class, 'duafaktor'])->name('pegawai.duafaktor')->middleware('password.confirm');
+    Route::get('/tampilan', [PegawaiController::class, 'tampilan'])->name('pegawai.tampilan');
     Route::get('/notifikasi', [PegawaiController::class, 'notification'])->name('pegawai.notifikasi');
     Route::patch('/profil/email', [PegawaiController::class, 'updateEmail'])->name('profile.email.update');
     Route::patch('/profil/password', [PegawaiController::class, 'updatePassword'])->name('profile.password.update');

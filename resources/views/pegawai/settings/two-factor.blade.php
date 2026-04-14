@@ -1,4 +1,4 @@
-<x-layouts::pegawai_app :title="__('Profil')">
+<x-layouts::pegawai_app :title="__('Dua Faktor')">
     <section class="w-full">
         @include('partials.settings-heading')
 
@@ -50,10 +50,10 @@
                         </div>
                     </div>
 
-                {{-- KONDISI 2: SUDAH AKTIF --}}
+                    {{-- KONDISI 2: SUDAH AKTIF --}}
                 @elseif (auth()->user()->hasEnabledTwoFactorAuthentication())
                     <div class="space-y-4">
-                        <flux:badge color="green" inset="none">Aktif</flux:badge>
+                        <flux:badge color="green">Aktif</flux:badge>
                         <flux:text>2FA sedang melindungi akun Anda. PIN akan diminta setiap kali Anda login.</flux:text>
 
                         <form method="POST" action="{{ route('pegawai.2fa.disable') }}">
@@ -65,7 +65,7 @@
                         </form>
                     </div>
 
-                {{-- KONDISI 3: BELUM AKTIF --}}
+                    {{-- KONDISI 3: BELUM AKTIF --}}
                 @else
                     <div class="space-y-4">
                         <flux:badge color="red">Nonaktif</flux:badge>

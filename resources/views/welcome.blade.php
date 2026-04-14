@@ -1,22 +1,24 @@
 <x-layouts::app.landing :title="__('Selamat Datang')">
-    <div class="bg-white text-zinc-900 font-sans">
+    <div class="text-zinc-900 font-sans">
 
         <nav class="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
             <div class="flex items-center gap-2">
                 <flux:icon.shield-check class="text-emerald-600 w-8 h-8" />
-                <span class="text-2xl font-bold tracking-tight">SIM<span class="text-emerald-600">PEG</span></span>
+                <span class="text-2xl font-bold tracking-tight dark:text-white">SIM<span
+                        class="text-emerald-600">PEG</span></span>
             </div>
             <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="{{ route('home') }}" class="hover:text-emerald-600 transition-colors">Beranda</a>
-                <a href="#fitur" class="hover:text-emerald-600 transition-colors">Fitur</a>
-                <a href="#" class="hover:text-emerald-600 transition-colors">Tentang Kami</a>
+                <a href="{{ route('home') }}"
+                    class="hover:text-emerald-600 transition-colors dark:text-white">Beranda</a>
+                <a href="#fitur" class="hover:text-emerald-600 transition-colors dark:text-white">Fitur</a>
+                <a href="#" class="hover:text-emerald-600 transition-colors dark:text-white">Tentang Kami</a>
                 {{-- <flux:button href="{{ route('login') }}" variant="primary"
                     class="bg-emerald-600 hover:bg-emerald-700">
                     Masuk Ke Sistem
                 </flux:button> --}}
                 @auth
-                    <a href="{{ url(auth()->check() && auth()->user()->employee->role == 'admin' ? '/dashboard' : '/homepage') }}"
-                        class="block bg-emerald-600 hover:bg-emerald-700">
+                    <a href="{{ url(auth()->check() && auth()->user()->employee_id == null ? '/dashboard' : '/homepage') }}"
+                        class="block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-emerald-600 hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal bg-emerald-600 hover:bg-emerald-700" wire:navigate>
                         Dashboard
                     </a>
                 @else
@@ -27,9 +29,9 @@
                             Log in
                         </flux:button>
 
-                        @if (Route::has('register'))
-                                <flux:button href="{{ route('register') }}" variant="primary"
-                                    class="block bg-emerald-600 hover:bg-emerald-700" wire:navigate>
+                        @if (Route::has('tamu.masukForm'))
+                                <flux:button href="{{ route('tamu.masukForm') }}" variant="primary"
+                                    class="block bg-emerald-600 hover:bg-emerald-700 dark:text-white" wire:navigate>
                                     Tamu
                                 </flux:button>
                             </div>
@@ -38,20 +40,21 @@
             </div>
         </nav>
 
-        <section class="relative overflow-hidden bg-emerald-50/50 py-20 px-8">
+        <section class="relative overflow-hidden bg-emerald-50/50 dark:bg-transparent py-20 px-8">
             <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
                 <div class="space-y-6">
                     <flux:badge color="green" size="sm">Sistem Informasi Pegawai v2.0</flux:badge>
-                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight">
+                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight dark:text-white">
                         Manajemen Pegawai <br>
                         <span class="text-emerald-600">Lebih Modern & Efisien.</span>
                     </h1>
-                    <p class="text-lg text-zinc-600 max-w-lg">
+                    <p class="text-lg text-zinc-600 max-w-lg dark:text-white">
                         Optimalkan produktivitas instansi Anda dengan pengelolaan data pegawai yang transparan,
                         otomatis, dan terintegrasi dalam satu platform.
                     </p>
                     <div class="flex gap-4">
-                        <flux:button variant="primary" class="bg-emerald-600 px-8">Mulai Sekarang</flux:button>
+                        <flux:button variant="primary" class="bg-emerald-600 px-8 dark:text-white">Mulai Sekarang
+                        </flux:button>
                         <flux:button variant="ghost">Pelajari Fitur</flux:button>
                     </div>
                 </div>
@@ -82,15 +85,16 @@
                                 </p>
                             </div>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="fitur" class="py-24 px-8 max-w-7xl mx-auto">
-            <div class="text-center mb-16 space-y-4">
+            <div class="text-center mb-16 space-y-4 dark:text-white">
                 <h2 class="text-3xl font-bold">Fitur Unggulan SIMPEG</h2>
-                <p class="text-zinc-500 max-w-2xl mx-auto">Dirancang khusus untuk memenuhi kebutuhan administrasi
+                <p class="text-zinc-500 dark:text-white max-w-2xl mx-auto">Dirancang khusus untuk memenuhi kebutuhan
+                    administrasi
                     kepegawaian modern di Indonesia.</p>
             </div>
 
@@ -100,8 +104,9 @@
                         class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
                         <flux:icon.user class="text-emerald-600 group-hover:text-white" />
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Profil Pegawai Lengkap</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">Kelola biodata, riwayat pendidikan, hingga keluarga
+                    <h3 class="text-xl font-bold mb-3 dark:text-white">Profil Pegawai Lengkap</h3>
+                    <p class="text-zinc-500 text-sm leading-relaxed dark:text-white">Kelola biodata, riwayat pendidikan,
+                        hingga keluarga
                         pegawai secara digital dan terpusat.</p>
                 </div>
 
@@ -110,8 +115,9 @@
                         class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
                         <flux:icon.chart-bar class="text-emerald-600 group-hover:text-white" />
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Kenaikan Pangkat Otomatis</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">Sistem cerdas yang memberikan notifikasi otomatis
+                    <h3 class="text-xl font-bold mb-3 dark:text-white">Kenaikan Pangkat Otomatis</h3>
+                    <p class="text-zinc-500 text-sm leading-relaxed dark:text-white">Sistem cerdas yang memberikan
+                        notifikasi otomatis
                         saat pegawai memasuki periode kenaikan pangkat berkala.</p>
                 </div>
 
@@ -120,8 +126,9 @@
                         class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
                         <flux:icon.lock-closed class="text-emerald-600 group-hover:text-white" />
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Keamanan Multi-Lapis</h3>
-                    <p class="text-zinc-500 text-sm leading-relaxed">Dilindungi dengan Autentikasi 2 Faktor (2FA) untuk
+                    <h3 class="text-xl font-bold mb-3 dark:text-white">Keamanan Multi-Lapis</h3>
+                    <p class="text-zinc-500 text-sm leading-relaxed dark:text-white">Dilindungi dengan Autentikasi 2
+                        Faktor (2FA) untuk
                         memastikan data sensitif pegawai tetap aman.</p>
                 </div>
             </div>

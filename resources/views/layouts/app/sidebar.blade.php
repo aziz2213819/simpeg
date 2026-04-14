@@ -19,17 +19,25 @@
                     wire:navigate>
                     {{ __('Dashboard') }}
                 </flux:sidebar.item>
-                <flux:sidebar.item icon="home" :href="route('jabatan.index')"
+                <flux:sidebar.item icon="briefcase" :href="route('jabatan.index')"
                     :current="request()->routeIs('jabatan.index')" wire:navigate>
                     {{ __('Jabatan') }}
                 </flux:sidebar.item>
-                <flux:sidebar.item icon="home" :href="route('golongan.index')"
+                <flux:sidebar.item icon="rectangle-stack" :href="route('golongan.index')"
                     :current="request()->routeIs('golongan.index')" wire:navigate>
                     {{ __('Golongan') }}
                 </flux:sidebar.item>
-                <flux:sidebar.item icon="home" :href="route('pangkat.index')"
+                <flux:sidebar.item icon="check-badge" :href="route('pangkat.index')"
                     :current="request()->routeIs('pangkat.index')" wire:navigate>
                     {{ __('Pangkat') }}
+                </flux:sidebar.item>
+                <flux:sidebar.item icon="users" :href="route('pegawai.index')"
+                    :current="request()->routeIs('pegawai.index')" wire:navigate>
+                    {{ __('Pegawai') }}
+                </flux:sidebar.item>
+                <flux:sidebar.item icon="bell" :href="route('pegawai.index')"
+                    :current="request()->routeIs('pegawai.index')" wire:navigate>
+                    {{ __('Notifikasi') }}
                 </flux:sidebar.item>
             </flux:sidebar.group>
         </flux:sidebar.nav>

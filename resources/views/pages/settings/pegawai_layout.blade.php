@@ -6,7 +6,7 @@
             @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
                 <flux:navlist.item :href="route('pegawai.duafaktor')" wire:navigate>{{ __('Authentikasi Dua Faktor') }}</flux:navlist.item>
             @endif
-            <flux:navlist.item :href="route('appearance.edit')" wire:navigate>{{ __('Tampilan') }}</flux:navlist.item>
+            <flux:navlist.item :href="route('pegawai.tampilan')" wire:navigate>{{ __('Tampilan') }}</flux:navlist.item>
         </flux:navlist>
     </div>
 

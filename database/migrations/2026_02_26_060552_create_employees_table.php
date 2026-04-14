@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('nip')->unique();
             $table->string('name');
-            $table->date('birth_date')->nullable();
-            $table->enum('gender', ['laki-laki', 'perempuan'])->nullable();
-            $table->string('status');
-            $table->dateTime('tmt_start')->default(now());
-            $table->dateTime('tmt_end')->nullable();
+            $table->date('birth_date');
+            $table->enum('gender', ['l', 'p'])->default('l');
+            $table->enum('status', ['active', 'nonactive'])->default('active');
+            $table->date('tmt_start')->default(now());
+            $table->date('tmt_end')->nullable();
             $table->enum('type', ['Non ASN', 'ASN'])->default('Non ASN');
 
             // RELASI

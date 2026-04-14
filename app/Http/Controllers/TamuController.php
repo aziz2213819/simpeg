@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use App\Services\PromotionService;
 
 class TamuController extends Controller
 {
@@ -13,8 +15,14 @@ class TamuController extends Controller
         return view('tamu.index', compact('name', 'address'));
     }
 
-    public function masukForm()
+    public function masukForm(PromotionService $promotionService)
     {
+        $users = User::has('employee')->with('employee')->get();
+        $debugResult = $promotionService->checkAndGenerateNotifications($users);
+        if (count($debugResult) > 0) {
+            dd($debugResult);
+        }
+
         return view('pages.auth.register');
     }
 
