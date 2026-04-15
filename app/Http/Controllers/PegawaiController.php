@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -121,6 +122,25 @@ class PegawaiController extends Controller
     public function notification()
     {
         $user = Auth::user();
-        return view('pegawai.settings.notifikasi', compact('user'));
+
+        // Ambil notifikasi khusus untuk ID pegawai milik user ini
+        // Urutkan dari yang paling baru (latest)
+        $notifications = Notification::where('employee_id', $user->employee_id)
+            ->latest()
+            ->paginate(10);
+
+        return view('pegawai.notifikasi.index', compact('user', 'notifications'));
+    }
+
+    public function notificationShow(Notification $notification)
+    {
+        // Keamanan: Pastikan notifikasi ini benar-benar milik pegawai yang login
+        if ($notification->employee->id !== Auth::user()->employee->id) {
+            abort(403, 'Anda tidak memiliki akses ke notifikasi ini.');
+        }
+
+        $notification->update(['is_read' => true]);
+
+        return back()->with('success', 'Notifikasi ditandai sudah dibaca.');
     }
 }

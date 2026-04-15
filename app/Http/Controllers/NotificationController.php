@@ -1,0 +1,130 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Employee;
+use App\Models\Notification;
+use Illuminate\Http\Request;
+
+class NotificationController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+
+        $notifications = Notification::with('employee')
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($q) use ($search) {
+                    // Cari berdasarkan Judul Notifikasi
+                    $q->where('title', 'like', "%{$search}%")
+                      // ATAU cari berdasarkan Nama Pegawai di tabel relasi
+                      ->orWhereHas('employee', function ($subQuery) use ($search) {
+                          $subQuery->where('name', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.notifikasi.index', compact('notifications', 'search'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        // Ambil data pegawai untuk dipilih di form
+        $employees = Employee::orderBy('name', 'asc')->get();
+        return view('admin.notifikasi.create', compact('employees'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $rules = [
+            'employee_id' => 'required|exists:employees,id',
+            'type'        => 'required|string|max:50',
+            'title'       => 'required|string|max:255',
+            'message'     => 'required|string',
+        ];
+
+        $messages = [
+            'required' => 'Kolom :attribute wajib diisi.',
+            'exists'   => 'Data :attribute tidak valid/tidak ditemukan.',
+        ];
+
+        $attributes = [
+            'employee_id' => 'Pegawai Penerima',
+            'type'        => 'Jenis Notifikasi',
+            'title'       => 'Judul Pesan',
+            'message'     => 'Isi Pesan',
+        ];
+
+        $validatedData = $request->validate($rules, $messages, $attributes);
+
+        // Set default is_read = false (0) saat dibuat manual
+        $validatedData['is_read'] = false;
+
+        Notification::create($validatedData);
+
+        return redirect()->route('admin.notifikasi.index')->with('success', 'Notifikasi berhasil dikirim ke pegawai.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Notification $notification)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Notification $notifikasi)
+    {
+        $employees = Employee::orderBy('name', 'asc')->get();
+        return view('admin.notifikasi.edit', compact('notifikasi', 'employees'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Notification $notifikasi)
+    {
+        $rules = [
+            'employee_id' => 'required|exists:employees,id',
+            'type'        => 'required|string|max:50',
+            'title'       => 'required|string|max:255',
+            'message'     => 'required|string',
+            'is_read'     => 'required|boolean', // Tambahan untuk edit status baca
+        ];
+
+        $messages = [
+            'required' => 'Kolom :attribute wajib diisi.',
+        ];
+
+        $validatedData = $request->validate($rules, $messages);
+
+        $notifikasi->update($validatedData);
+
+        return redirect()->route('admin.notifikasi.index')->with('success', 'Data notifikasi berhasil diperbarui.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Notification $notifikasi)
+    {
+        $notifikasi->delete();
+
+        return redirect()->route('admin.notifikasi.index')->with('success', 'Notifikasi berhasil dihapus.');
+    }
+}

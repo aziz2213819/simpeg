@@ -35,8 +35,8 @@
                     :current="request()->routeIs('pegawai.index')" wire:navigate>
                     {{ __('Pegawai') }}
                 </flux:sidebar.item>
-                <flux:sidebar.item icon="bell" :href="route('pegawai.index')"
-                    :current="request()->routeIs('pegawai.index')" wire:navigate>
+                <flux:sidebar.item icon="bell" :href="route('notifikasi.index')"
+                    :current="request()->routeIs('notifikasi.index')" wire:navigate>
                     {{ __('Notifikasi') }}
                 </flux:sidebar.item>
             </flux:sidebar.group>

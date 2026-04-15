@@ -1,7 +1,7 @@
 {{-- ================= ALERT SUKSES ================= --}}
 @if (session('success'))
-    <div id="alert-success"
-        class="flex items-center p-4 text-green-800 border-l-4 border-green-500 bg-green-50 rounded-r-lg shadow-sm transition-all duration-500"
+    <div id="alert-success" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
+        class="flex items-center p-4 text-emerald-800 border-l-4 border-emerald-500 bg-emerald-50 rounded-r-lg shadow-sm transition-all duration-500"
         role="alert">
         <svg class="shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd"
@@ -16,7 +16,7 @@
 
 {{-- ================= ALERT GAGAL / ERROR ================= --}}
 @if (session('error'))
-    <div id="alert-error"
+    <div id="alert-error" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
         class="flex items-center p-4 text-red-800 border-l-4 border-red-500 bg-red-50 rounded-r-lg shadow-sm transition-all duration-500"
         role="alert">
         <svg class="shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

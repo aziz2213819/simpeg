@@ -14,7 +14,7 @@ class Notification extends Model
         'is_read',
     ];
 
-    public function employees()
+    public function employee()
     {
         return $this->belongsTo(Employee::class);
     }

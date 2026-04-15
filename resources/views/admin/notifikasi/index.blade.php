@@ -1,0 +1,109 @@
+<x-layouts::app :title="__('Notifikasi')">
+
+    <div class="p-6 space-y-6">
+
+        <x-managed-message />
+
+        <flux:card>
+            {{-- Header & Search Form --}}
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                <flux:heading size="lg">Data Notifikasi Sistem</flux:heading>
+
+                <div class="flex w-full sm:w-auto items-center gap-2">
+                    <form action="{{ route('notifikasi.index') }}" method="GET" class="w-full sm:w-64 flex gap-2">
+                        <flux:input name="search" type="search" value="{{ request('search') }}"
+                            placeholder="Cari Nama atau Judul..." />
+                        <flux:button type="submit">Cari</flux:button>
+                    </form>
+
+                    <flux:button href="{{ route('notifikasi.create') }}" wire:navigate>
+                        Kirim Notifikasi Manual
+                    </flux:button>
+                </div>
+            </div>
+
+            {{-- Table --}}
+            <flux:table>
+                <flux:table.columns>
+                    <flux:table.column>Penerima</flux:table.column>
+                    <flux:table.column>Tipe</flux:table.column>
+                    <flux:table.column>Judul Pesan</flux:table.column>
+                    <flux:table.column>Status</flux:table.column>
+                    <flux:table.column>Tanggal</flux:table.column>
+                    <flux:table.column class="text-right">Aksi</flux:table.column>
+                </flux:table.columns>
+
+                <flux:table.rows>
+                    @forelse($notifications as $notif)
+                        <flux:table.row>
+                            <flux:table.cell>
+                                <b>{{ $notif->employee->name ?? 'Pegawai Dihapus' }}</b>
+                            </flux:table.cell>
+
+                            <flux:table.cell>
+                                <flux:badge color="zinc">{{ Str::headline($notif->type) }}</flux:badge>
+                            </flux:table.cell>
+
+                            <flux:table.cell>{{ $notif->title }}</flux:table.cell>
+
+                            <flux:table.cell>
+                                @if($notif->is_read)
+                                    <flux:badge color="green">Dibaca</flux:badge>
+                                @else
+                                    <flux:badge color="red">Belum Dibaca</flux:badge>
+                                @endif
+                            </flux:table.cell>
+
+                            <flux:table.cell>{{ $notif->created_at->format('d/m/Y H:i') }}</flux:table.cell>
+
+                            <flux:table.cell class="flex justify-end gap-2">
+                                <flux:button size="sm" href="{{ route('notifikasi.edit', $notif->id) }}" wire:navigate>
+                                    Edit
+                                </flux:button>
+
+                                <flux:modal.trigger name="delete-notif-{{ $notif->id }}">
+                                    <flux:button size="sm" variant="danger">Hapus</flux:button>
+                                </flux:modal.trigger>
+
+                                {{-- Modal Konfirmasi Hapus --}}
+                                <flux:modal name="delete-notif-{{ $notif->id }}" class="min-w-88">
+                                    <form action="{{ route('notifikasi.destroy', $notif->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <div class="space-y-6">
+                                            <div>
+                                                <flux:heading size="lg">Hapus Notifikasi?</flux:heading>
+                                                <flux:subheading>Tindakan ini akan menarik kembali pesan yang sudah dikirim
+                                                    ke pegawai ini.</flux:subheading>
+                                            </div>
+                                            <div class="flex justify-end gap-2">
+                                                <flux:modal.close>
+                                                    <flux:button variant="ghost">Batal</flux:button>
+                                                </flux:modal.close>
+                                                <flux:button type="submit" variant="danger">Ya, Hapus</flux:button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </flux:modal>
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @empty
+                        <flux:table.row>
+                            <flux:table.cell colspan="6" class="text-center py-4 text-gray-500">
+                                @if($search)
+                                    Tidak menemukan notifikasi dengan kata kunci "<b>{{ $search }}</b>".
+                                @else
+                                    Belum ada notifikasi yang terkirim.
+                                @endif
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @endforelse
+                </flux:table.rows>
+            </flux:table>
+
+            <div class="mt-4">
+                {{ $notifications->links() }}
+            </div>
+        </flux:card>
+    </div>
+</x-layouts::app>

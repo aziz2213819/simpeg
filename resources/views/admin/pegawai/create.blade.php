@@ -116,7 +116,8 @@
 
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('livewire:navigated', function () {
+            console.log('Script loaded'); // Debug: Pastikan script ini dijalankan
             // Ambil elemen berdasarkan ID yang kita buat tadi
             const tipePegawai = document.getElementById('tipe_pegawai');
             const tmtAkhir = document.getElementById('tmt_akhir');

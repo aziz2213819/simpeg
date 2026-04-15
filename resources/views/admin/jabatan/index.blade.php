@@ -4,13 +4,21 @@
 
     <flux:card>
 
-        {{-- Header --}}
-        <div class="flex justify-between items-center mb-4">
+        {{-- Header & Search Bar --}}
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
             <flux:heading size="lg">Data Jabatan</flux:heading>
 
-            <flux:button wire:click="openCreate">
-                Tambah Jabatan
-            </flux:button>
+            <div class="flex w-full sm:w-auto items-center gap-2">
+                {{-- Input Pencarian Real-time Livewire --}}
+                <div class="w-full sm:w-64">
+                    <flux:input wire:model.live.debounce.300ms="search" type="search"
+                        placeholder="Cari Nama Jabatan..." />
+                </div>
+
+                <flux:button wire:click="openCreate">
+                    Tambah Jabatan
+                </flux:button>
+            </div>
         </div>
 
         {{-- Table --}}
@@ -22,7 +30,7 @@
             </flux:table.columns>
 
             <flux:table.rows>
-                @foreach($positions as $position)
+                @forelse($positions as $position)
                     <flux:table.row wire:key="row-{{ $position->id }}">
                         <flux:table.cell>
                             {{ $position->position_name }}
@@ -48,7 +56,17 @@
 
                         </flux:table.cell>
                     </flux:table.row>
-                @endforeach
+                @empty
+                    <flux:table.row>
+                        <flux:table.cell colspan="3" class="text-center py-4 text-gray-500">
+                            @if($search)
+                                Tidak menemukan jabatan dengan kata kunci "<b>{{ $search }}</b>".
+                            @else
+                                Belum ada data jabatan.
+                            @endif
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforelse
             </flux:table.rows>
         </flux:table>
 

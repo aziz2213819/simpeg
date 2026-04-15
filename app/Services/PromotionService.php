@@ -64,15 +64,13 @@ class PromotionService
                             ];
 
                             // KODE ASLI UNTUK INSERT DB:
-                            /*
                             Notification::create([
                                 'employee_id' => $employee->id,
                                 'type'        => $type, // Murni 'pangkat', 'gaji_berkala', atau 'pensiun' (Aman untuk ENUM)
-                                'title'       => 'Peringatan H-' . $schedule['label'] . ' ' . ucwords(str_replace('_', ' ', $type)),
-                                'message'     => "Sistem mendeteksi jadwal {$type} untuk {$employee->name} jatuh pada " . $targetDate->format('d M Y') . ". Mohon siapkan berkas.",
+                                'title'       => 'Peringatan H-' . $schedule['label'] . ' ' . Str::headline($type),
+                                'message'     => "Sistem mendeteksi jadwal " . Str::headline($type) . " untuk {$employee->name} jatuh pada " . $targetDate->format('d M Y') . ". Mohon siapkan berkas.",
                                 'is_read'     => false,
                             ]);
-                            */
                         }
                     }
                 }
@@ -97,7 +95,7 @@ class PromotionService
                 $nextCycle = ceil($yearsElapsed / 4) * 4;
                 if ($nextCycle == 0) $nextCycle = 4;
                 return $tmt->copy()->addYears($nextCycle);
-
+                
             case 'gaji_berkala':
                 // Aturan: Kelipatan 2 Tahun dari TMT
                 if (!$employee->tmt_start) return null;

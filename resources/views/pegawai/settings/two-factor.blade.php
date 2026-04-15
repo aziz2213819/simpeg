@@ -74,7 +74,7 @@
 
                         <form method="POST" action="{{ route('pegawai.2fa.enable') }}">
                             @csrf
-                            <flux:button type="submit" variant="primary" icon="shield-check">
+                            <flux:button type="submit" variant="primary" color="emerald" icon="shield-check">
                                 Aktifkan 2FA
                             </flux:button>
                         </form>

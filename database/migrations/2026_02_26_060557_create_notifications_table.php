@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('employee_id')
               ->constrained('employees')
               ->cascadeOnDelete();
-            $table->enum('type', ['pangkat', 'gaji_berlkala', 'pensiun']);
+            $table->enum('type', ['pangkat', 'gaji_berkala', 'pensiun']);
             $table->string('title');
             $table->text('message');
             $table->boolean('is_read')->default(false);

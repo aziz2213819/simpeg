@@ -80,7 +80,7 @@
                     Batal
                 </flux:button>
 
-                <flux:button wire:click="save" wire:loading.attr="disabled" wire:target="save">
+                <flux:button wire:click="save" wire:loading.attr="disabled" wire:target="save" variant="primary" color="emerald">
                     {{ $isEdit ? 'Update' : 'Simpan' }}
                 </flux:button>
             </div>

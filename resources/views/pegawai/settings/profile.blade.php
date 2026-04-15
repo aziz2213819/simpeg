@@ -18,7 +18,7 @@
                     @enderror
                     <div class="flex items-center gap-4 mt-4">
                         <div class="flex items-center justify-end">
-                            <flux:button variant="primary" type="submit" class="w-full"
+                            <flux:button variant="primary" color="emerald" type="submit" class="w-full"
                                 data-test="update-profile-button">
                                 {{ __('Save') }}
                             </flux:button>

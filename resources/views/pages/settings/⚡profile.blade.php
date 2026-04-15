@@ -106,7 +106,7 @@ new #[Title('Profile settings')] class extends Component {
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full" data-test="update-profile-button">
+                    <flux:button variant="primary" color="emerald" type="submit" class="w-full" data-test="update-profile-button">
                         {{ __('Save') }}
                     </flux:button>
                 </div>
@@ -117,8 +117,8 @@ new #[Title('Profile settings')] class extends Component {
             </div>
         </form>
 
-        @if ($this->showDeleteUser)
+        {{-- @if ($this->showDeleteUser)
             <livewire:pages::settings.delete-user-form />
-        @endif
+        @endif --}}
     </x-pages::settings.layout>
 </section>

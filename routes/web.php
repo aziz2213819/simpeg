@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\TamuController;
 use App\Livewire\GradeLive;
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/jabatan', PositionLive::class)->name('jabatan.index');
         Route::get('/pangkat', RankLive::class)->name('pangkat.index');
         Route::resource('pegawai', EmployeeController::class);
+        Route::resource('notifikasi', NotificationController::class);
     });
 });
     
@@ -36,9 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/password', [PegawaiController::class, 'password'])->name('pegawai.password');
     Route::get('/duafaktor', [PegawaiController::class, 'duafaktor'])->name('pegawai.duafaktor')->middleware('password.confirm');
     Route::get('/tampilan', [PegawaiController::class, 'tampilan'])->name('pegawai.tampilan');
-    Route::get('/notifikasi', [PegawaiController::class, 'notification'])->name('pegawai.notifikasi');
     Route::patch('/profil/email', [PegawaiController::class, 'updateEmail'])->name('profile.email.update');
     Route::patch('/profil/password', [PegawaiController::class, 'updatePassword'])->name('profile.password.update');
+    Route::get('/notifikasi', [PegawaiController::class, 'notification'])->name('pegawai.notifikasi');
+    Route::patch('/notifikasi/{notification}', [PegawaiController::class, 'notificationShow'])->name('pegawai.notifikasi.show');
 
     Route::post('/pegawai/2fa/enable', [PegawaiController::class, 'enable2fa'])->name('pegawai.2fa.enable');
     Route::delete('/pegawai/2fa/disable', [PegawaiController::class, 'disable2fa'])->name('pegawai.2fa.disable');

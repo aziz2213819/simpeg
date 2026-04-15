@@ -14,10 +14,16 @@ class PositionLive extends Component
     public $position_name;
     public $isEdit = false;
     public $showModal = false;
+    public $search = '';
 
     protected $rules = [
         'position_name' => 'required|string|max:255',
     ];
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function openCreate()
     {
@@ -75,9 +81,14 @@ class PositionLive extends Component
 
     public function render()
     {
+        // 3. Tambahkan kondisi when() untuk filter pencarian
         $positions = Position::withCount('employees')
+            ->when($this->search, function ($query) {
+                $query->where('position_name', 'like', '%' . $this->search . '%');
+            })
             ->latest()
             ->paginate(10);
+            
         return view('admin.jabatan.index', [
             'positions' => $positions
         ]);

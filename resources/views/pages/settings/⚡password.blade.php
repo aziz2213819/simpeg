@@ -44,33 +44,19 @@ new #[Title('Password settings')] class extends Component {
 
     <flux:heading class="sr-only">{{ __('Password Settings') }}</flux:heading>
 
-    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
+    <x-pages::settings.layout :heading="__('Perbarui Password')" :subheading="__('Pastikan akun Anda menggunakan password yang panjang dan acak agar tetap aman')">
         <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
-            <flux:input
-                wire:model="current_password"
-                :label="__('Current password')"
-                type="password"
-                required
-                autocomplete="current-password"
-            />
-            <flux:input
-                wire:model="password"
-                :label="__('New password')"
-                type="password"
-                required
-                autocomplete="new-password"
-            />
-            <flux:input
-                wire:model="password_confirmation"
-                :label="__('Confirm Password')"
-                type="password"
-                required
-                autocomplete="new-password"
-            />
+            <flux:input wire:model="current_password" :label="__('Password saat ini')" type="password" required
+                autocomplete="current-password" />
+            <flux:input wire:model="password" :label="__('Password baru')" type="password" required
+                autocomplete="new-password" />
+            <flux:input wire:model="password_confirmation" :label="__('Konfirmasi password baru')" type="password" required
+                autocomplete="new-password" />
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full" data-test="update-password-button">
+                    <flux:button variant="primary" color="emerald" type="submit" class="w-full"
+                        data-test="update-password-button">
                         {{ __('Save') }}
                     </flux:button>
                 </div>

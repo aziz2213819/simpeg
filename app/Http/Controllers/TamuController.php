@@ -18,10 +18,10 @@ class TamuController extends Controller
     public function masukForm(PromotionService $promotionService)
     {
         $users = User::has('employee')->with('employee')->get();
-        $debugResult = $promotionService->checkAndGenerateNotifications($users);
-        if (count($debugResult) > 0) {
-            dd($debugResult);
-        }
+        $result = $promotionService->checkAndGenerateNotifications($users);
+        // if (count($debugResult) > 0) {
+        //     dd($debugResult);
+        // }
 
         return view('pages.auth.register');
     }

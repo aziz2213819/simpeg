@@ -11,7 +11,7 @@
         <flux:navbar class="-mb-px max-lg:hidden">
             <flux:navbar.item icon="home" :href="route('pegawai.homepage')"
                 :current="request()->routeIs('pegawai.homepage')" wire:navigate>Beranda</flux:navbar.item>
-            <flux:navbar.item icon="bell" badge="12" :href="route('pegawai.notifikasi')"
+            <flux:navbar.item icon="bell" badge="{{ $globalUnreadCount ?? '0' }}" :href="route('pegawai.notifikasi')"
                 :current="request()->routeIs('pegawai.notifikasi')" wire:navigate>Notifikasi</flux:navbar.item>
         </flux:navbar>
         <flux:spacer />
