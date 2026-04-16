@@ -18,18 +18,23 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $grade_id = $request->input('grade_id');
+        $grades = Grade::orderBy('grade_code', 'asc')->get();
         $employees = Employee::query()
-        ->when($search, function ($query, $search) {
-            // Gunakan kurung pada query agar OR tidak merusak kondisi lain (jika ada)
-            return $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('nip', 'like', "%{$search}%");
-            });
-        })
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
-        return view('admin.pegawai.index', compact('employees', 'search'));
+            ->when($search, function ($query, $search) {
+                return $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('nip', 'like', "%{$search}%");
+                });
+            })
+            ->when($grade_id, function ($query, $grade_id) {
+                // Filter berdasarkan grade_id jika user memilih golongan
+                return $query->where('grade_id', $grade_id);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+        return view('admin.pegawai.index', compact('employees', 'search', 'grade_id', 'grades'));
     }
 
     /**

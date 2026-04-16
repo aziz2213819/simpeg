@@ -66,6 +66,34 @@
         box-shadow: 0 0 0 2px white, 0 0 0 4px #059669 !important;
     }
 
+    /* Override warna outline/border Flux Textarea saat sedang di-klik (focus) */
+    [data-flux-textarea]:focus-within {
+        /* Mengubah warna border saat fokus */
+        border-color: #059669 !important; /* emerald-600 */
+        
+        /* Mengubah warna ring/outline saat fokus */
+        --tw-ring-color: #059669 !important;
+        --flux-ring: #059669 !important;
+        --flux-border: #059669 !important;
+        
+        /* Menghilangkan ring zinc default jika masih muncul */
+        outline-color: #059669 !important;
+    }
+
+    /* Opsional: Jika Anda juga ingin mengubah warna saat hover */
+    [data-flux-textarea] input:focus {
+        /* Mengubah warna border saat fokus */
+        border-color: #059669 !important; /* emerald-600 */
+        
+        /* Mengubah warna ring/outline saat fokus */
+        --tw-ring-color: #059669 !important;
+        --flux-ring: #059669 !important;
+        --flux-border: #059669 !important;
+        
+        /* Menghilangkan ring zinc default jika masih muncul */
+        outline-color: #059669 !important;
+    }
+
     /* Menargetkan komponen flux:link secara global */
     [data-flux-link] {
         color: #059669 !important; /* emerald-600 */

@@ -34,5 +34,18 @@ class TamuController extends Controller
         Cookie::queue('guest_address', $address, 1440);
         return redirect()->route('tamu.index');
     }
+
+    public function create()
+    {
+        return view('tamu.pengaduan');
+    }
+
+    public function store(Request $request)
+    {
+        dd($request->all());
+        // $data['user_id'] = auth()->user()->id;
+        // Tamu::create($data);
+        // return redirect()->route('tamu.index');
+    }
 }
  

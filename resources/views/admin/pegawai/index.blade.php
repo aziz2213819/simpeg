@@ -10,11 +10,31 @@
                 <flux:heading size="lg">Data Pegawai</flux:heading>
 
                 <div class="flex w-full sm:w-auto items-center gap-2">
-                    {{-- Input Pencarian --}}
-                    <form action="{{ route('pegawai.index') }}" method="GET" class="w-full sm:w-64 flex gap-2">
-                        <flux:input name="search" type="search" value="{{ request('search') }}" {{-- Pertahankan teks
-                            yang diketik --}} placeholder="Cari Nama atau NIP..." />
-                        <flux:button type="submit">Cari</flux:button>
+
+                    {{-- Form Pencarian & Filter --}}
+                    <form action="{{ route('pegawai.index') }}" method="GET"
+                        class="w-full flex flex-col sm:flex-row gap-2">
+
+                        {{-- Dropdown Filter Golongan --}}
+                        <div class="w-full sm:w-48">
+                            <flux:select name="grade_id" onchange="this.form.submit()">
+                                <option value="">Semua Golongan</option>
+                                @foreach($grades as $grade)
+                                    <option value="{{ $grade->id }}" {{ request('grade_id') == $grade->id ? 'selected' : '' }}>
+                                        {{ $grade->grade_code }}
+                                    </option>
+                                @endforeach
+                            </flux:select>
+                        </div>
+
+                        {{-- Input Pencarian --}}
+                        <div class="flex w-full sm:w-auto gap-2">
+                            <flux:input name="search" type="search" value="{{ request('search') }}"
+                                placeholder="Cari Nama atau NIP..." class="w-full sm:w-64"
+                                oninput="this.form.submit()" />
+                            <flux:button type="submit">Cari</flux:button>
+                        </div>
+
                     </form>
 
                     <flux:button href="{{ route('pegawai.create') }}" wire:navigate>

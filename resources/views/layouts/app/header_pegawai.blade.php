@@ -20,7 +20,8 @@
                 wire:navigate />
         </flux:navbar>
         <flux:dropdown position="top" align="start">
-            <flux:profile avatar="https://fluxui.dev/img/demo/user.png" />
+            <flux:profile initials="{{ Str::substr(auth()->user()->employee->name, 0, 1) }}" name="{{ auth()->user()->name }}"
+                icon-trailing="chevron-down" />
             <flux:menu>
                 <flux:menu.item class="w-full cursor-pointer" :href="route('pegawai.profil')" icon="user" wire:navigate>
                     Profil
@@ -47,7 +48,7 @@
         <flux:sidebar.nav>
             <flux:sidebar.item icon="home" :href="route('pegawai.homepage')"
                 :current="request()->routeIs('pegawai.homepage')" wire:navigate>Beranda</flux:sidebar.item>
-            <flux:sidebar.item icon="bell" badge="12" :href="route('pegawai.notifikasi')"
+            <flux:sidebar.item icon="bell" badge="{{ $globalUnreadCount ?? '0' }}" :href="route('pegawai.notifikasi')"
                 :current="request()->routeIs('pegawai.notifikasi')" wire:navigate>Notifikasi</flux:sidebar.item>
         </flux:sidebar.nav>
         <flux:sidebar.spacer />

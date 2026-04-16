@@ -11,6 +11,8 @@ use App\Livewire\RankLive;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
+Route::get('/pengaduan', [TamuController::class, 'create'])->name('pengaduan.create');
+Route::post('/pengaduan', [TamuController::class, 'store'])->name('pengaduan.store')->middleware('throttle:pengaduan_sampah');
 Route::get('/masuk', [TamuController::class, 'masukForm'])->name('tamu.masukForm');
 Route::post('/masuk', [TamuController::class, 'masuk'])->name('tamu.masuk');
 
