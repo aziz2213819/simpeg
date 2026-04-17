@@ -39,6 +39,10 @@
                     :current="request()->routeIs('notifikasi.index')" wire:navigate>
                     {{ __('Notifikasi') }}
                 </flux:sidebar.item>
+                <flux:sidebar.item icon="inbox-arrow-down" :href="route('admin.pengaduan.index')"
+                    :current="request()->routeIs('admin.pengaduan.index')" wire:navigate>
+                    {{ __('Pengaduan') }}
+                </flux:sidebar.item>
             </flux:sidebar.group>
         </flux:sidebar.nav>
 

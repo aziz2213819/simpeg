@@ -1,22 +1,24 @@
 <x-layouts::app.landing :title="__('Selamat Datang')">
     <div class="text-zinc-900 font-sans">
 
+        <x-floating-managed-message />
+
         <nav class="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
             <div class="flex items-center gap-2">
                 {{-- Mengganti ikon shield dengan leaf (daun) untuk tema lingkungan --}}
                 <flux:icon.globe-americas class="text-emerald-600 w-8 h-8" />
-                <span class="text-2xl font-bold tracking-tight dark:text-white">DLH<span
+                <span class="text-2xl font-bold tracking-tight dark:text-white">DLH <span
                         class="text-emerald-600">Care</span></span>
             </div>
             <div class="hidden md:flex items-center gap-8 text-sm font-medium">
                 <a href="{{ route('home') }}"
                     class="hover:text-emerald-600 transition-colors dark:text-white">Beranda</a>
                 <a href="#fitur" class="hover:text-emerald-600 transition-colors dark:text-white">Alur Lapor</a>
-                <a href="#" class="hover:text-emerald-600 transition-colors dark:text-white">Tentang DLH</a>
+                <a href="#footer" class="hover:text-emerald-600 transition-colors dark:text-white">Tentang DLH</a>
 
                 @auth
                     <a href="{{ url(auth()->check() && auth()->user()->employee_id == null ? '/dashboard' : '/homepage') }}"
-                        class="block px-5 py-1.5 text-white border border-emerald-600 hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal bg-emerald-600 hover:bg-emerald-700"
+                        class="block px-5 py-1.5 text-white border border-emerald-700 hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal bg-emerald-600 hover:bg-emerald-700"
                         wire:navigate>
                         Dashboard
                     </a>
@@ -55,7 +57,7 @@
                         <flux:button href="{{ route('pengaduan.create') }}" variant="primary"
                             class="bg-emerald-600 px-8 dark:text-white" wire:navigate>Buat Laporan Baru
                         </flux:button>
-                        <flux:button variant="ghost">Cek Status Laporan</flux:button>
+                        {{-- <flux:button variant="ghost">Cek Status Laporan</flux:button> --}}
                     </div>
                 </div>
                 <div class="relative">
@@ -136,7 +138,7 @@
             </div>
         </section>
 
-        <footer class="bg-zinc-950 text-zinc-400 py-16 px-8">
+        <footer id="footer" class="bg-zinc-950 text-zinc-400 py-16 px-8">
             <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
                 <div class="col-span-2 space-y-6">
                     <div class="flex items-center gap-2 text-white">
@@ -157,14 +159,14 @@
                 <div class="space-y-4">
                     <h4 class="text-white font-bold">Kontak DLH</h4>
                     <ul class="space-y-2 text-sm">
-                        <li>pengaduan@dlh.gresikkab.go.id</li> {{-- Sesuaikan nama kotanya jika perlu --}}
+                        <li>pengaduan@dlh.bangkalankab.go.id</li>
                         <li>(031) 1234-5678</li>
-                        <li>Jl. Lingkungan Hijau No. 1, Gresik</li>
+                        <li>Jl. Lingkungan Hijau No. 1, Bangkalan</li>
                     </ul>
                 </div>
             </div>
             <div class="max-w-7xl mx-auto border-t border-zinc-800 mt-12 pt-8 text-center text-xs">
-                <p>&copy; 2026 Dinas Lingkungan Hidup Kabupaten Gresik. Hak Cipta Dilindungi.</p>
+                <p>&copy; 2026 Dinas Lingkungan Hidup Kabupaten Bangkalan. Hak Cipta Dilindungi.</p>
             </div>
         </footer>
 

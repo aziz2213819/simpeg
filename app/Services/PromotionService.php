@@ -24,63 +24,91 @@ class PromotionService
     public function checkAndGenerateNotifications($users)
     {
         $now = Carbon::parse(now())->startOfDay();
-        $debugNotif = [];
+        // $debugNotif = [];
+
+        // 1. Kumpulkan semua ID Pegawai yang valid
+        $employeeIds = [];
+        foreach ($users as $user) {
+            if ($user->employee) {
+                $employeeIds[] = $user->employee->id;
+            }
+        }
+
+        // 2. QUERY OPTIMIZATION: Tarik SEMUA notifikasi tahun ini hanya dengan 1 Query
+        // Gunakan get() dan pilih kolom yang diperlukan saja agar hemat memori RAM
+        $existingNotifications = Notification::whereIn('employee_id', $employeeIds)
+            ->whereYear('created_at', $now->year)
+            ->get(['employee_id', 'type', 'title']);
+
+        // 3. Susun data ke array multidimensi untuk pencarian kilat (O(1) Lookup)
+        // Format: $notifCache[employee_id][type] = ['Judul Notif 1', 'Judul Notif 2']
+        $notifCache = [];
+        foreach ($existingNotifications as $notif) {
+            $notifCache[$notif->employee_id][$notif->type][] = $notif->title;
+        }
 
         foreach ($users as $user) {
             $employee = $user->employee;
             if (!$employee) continue;
 
-            // Loop berdasarkan tipe yang ada di array pemetaan di atas
             foreach ($this->typeSchedules as $type => $schedules) {
                 
-                // Panggil "Otak" penghitung tanggal target
                 $targetDate = $this->calculateTargetDate($employee, $type, $now);
 
-                // Jika data tidak valid atau target sudah lewat, lewati
                 if (!$targetDate || $now->greaterThanOrEqualTo($targetDate)) {
                     continue;
                 }
 
-                // Loop jadwal peringatan khusus untuk tipe ini saja
                 foreach ($schedules as $schedule) {
                     
-                    // Hitung kapan notifikasi harus mulai muncul (Trigger Date)
                     $triggerDate = $targetDate->copy()->{$schedule['method']}($schedule['value']);
 
-                    // Jika hari ini sudah masuk masa peringatan (Trigger Date)
                     if ($now->greaterThanOrEqualTo($triggerDate)) {
                         
-                        // KUNCI GEMBOK: Cek agar tidak terjadi duplikasi notifikasi di tahun yang sama
-                        $alreadyNotified = Notification::where('employee_id', $employee->id)
-                            ->where('type', $type)
-                            ->where('title', 'LIKE', '%H-' . $schedule['label'] . '%') 
-                            ->whereYear('created_at', $now->year)
-                            ->exists();
+                        // 4. KUNCI GEMBOK (OPTIMIZED): Cek langsung dari array di memori
+                        $alreadyNotified = false;
+                        $searchKeyword = 'H-' . $schedule['label'];
+
+                        // Pastikan key array ada sebelum di-loop untuk menghindari Error Undefined Array Key
+                        if (isset($notifCache[$employee->id][$type])) {
+                            foreach ($notifCache[$employee->id][$type] as $existingTitle) {
+                                // str_contains adalah bawaan PHP 8, berfungsi seperti LIKE '%keyword%' di SQL
+                                if (str_contains($existingTitle, $searchKeyword)) {
+                                    $alreadyNotified = true;
+                                    break; 
+                                }
+                            }
+                        }
 
                         if (!$alreadyNotified) {
-                            $debugNotif[] = [
-                                'nama' => $employee->name,
-                                'jenis' => Str::headline($type),
-                                'kategori_notif' => 'H-' . $schedule['label'],
-                                'tanggal_target' => $targetDate->format('d M Y'),
-                                'tanggal_trigger' => $triggerDate->format('d M Y'),
-                            ];
+                            // $debugNotif[] = [
+                            //     'nama' => $employee->name,
+                            //     'jenis' => Str::headline($type),
+                            //     'kategori_notif' => 'H-' . $schedule['label'],
+                            //     'tanggal_target' => $targetDate->format('d M Y'),
+                            //     'tanggal_trigger' => $triggerDate->format('d M Y'),
+                            // ];
 
-                            // Insert ke Database
+                            // 5. Buat Notifikasi Baru
+                            $newTitle = 'Peringatan H-' . $schedule['label'] . ' ' . Str::headline($type);
+                            
                             Notification::create([
                                 'employee_id' => $employee->id,
                                 'type'        => $type,
-                                'title'       => 'Peringatan H-' . $schedule['label'] . ' ' . Str::headline($type),
+                                'title'       => $newTitle,
                                 'message'     => "Sistem mendeteksi jadwal " . Str::headline($type) . " untuk {$employee->name} jatuh pada " . $targetDate->format('d M Y') . ". Mohon segera persiapkan berkas yang dibutuhkan.",
                                 'is_read'     => false,
                             ]);
+
+                            // 6. PENTING: Masukkan notifikasi yang baru dibuat ini ke dalam array cache
+                            // Ini untuk mencegah notifikasi terkirim dua kali jika loop berjalan lebih dari sekali untuk pegawai yang sama
+                            $notifCache[$employee->id][$type][] = $newTitle;
                         }
                     }
                 }
             }
         }
-
-        return $debugNotif;
+        // dd($debugNotif);
     }
 
     /**

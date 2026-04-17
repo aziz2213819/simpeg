@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TamuController;
 use App\Livewire\GradeLive;
 use App\Livewire\PositionLive;
@@ -23,14 +24,14 @@ Route::middleware(['tamu.cek'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     // admin
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    // Route::view('/dashboard', 'dashboard')->name('dashboard');
-
     Route::prefix("admin")->group(function () {
         Route::get('/golongan', GradeLive::class)->name('golongan.index');
         Route::get('/jabatan', PositionLive::class)->name('jabatan.index');
         Route::get('/pangkat', RankLive::class)->name('pangkat.index');
         Route::resource('pegawai', EmployeeController::class);
         Route::resource('notifikasi', NotificationController::class);
+        Route::get('/pengaduan', [ReportController::class, 'index'])->name('admin.pengaduan.index');
+        Route::patch('/pengaduan/{pengaduan}/status', [ReportController::class, 'updateStatus'])->name('admin.pengaduan.status');
     });
 });
     

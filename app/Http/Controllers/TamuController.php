@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -17,12 +18,6 @@ class TamuController extends Controller
 
     public function masukForm(PromotionService $promotionService)
     {
-        $users = User::has('employee')->with('employee')->get();
-        $result = $promotionService->checkAndGenerateNotifications($users);
-        // if (count($debugResult) > 0) {
-        //     dd($debugResult);
-        // }
-
         return view('pages.auth.register');
     }
 
@@ -35,17 +30,43 @@ class TamuController extends Controller
         return redirect()->route('tamu.index');
     }
 
-    public function create()
+    public function create(PromotionService $promotionService)
     {
+        $users = User::has('employee')->with('employee')->get();
+        $promotionService->checkAndGenerateNotifications($users);
+        // if (count($result) > 0) {
+        //     dd($result);
+        // }
         return view('tamu.pengaduan');
     }
 
     public function store(Request $request)
     {
-        dd($request->all());
-        // $data['user_id'] = auth()->user()->id;
-        // Tamu::create($data);
-        // return redirect()->route('tamu.index');
+        // 1. Validasi Input
+        $validated = $request->validate([
+            'nama_pelapor'  => 'required|string|max:255',
+            'kontak'        => 'nullable|string|max:50',
+            'deskripsi'     => 'nullable|string',
+            'lokasi_manual' => 'required|string',
+            'foto_bukti'    => 'required|image|mimes:jpeg,png,jpg|max:5120', // Max 5MB
+            'latitude'      => 'required|numeric',
+            'longitude'     => 'required|numeric',
+        ], [
+            'latitude.required' => 'Titik kordinat peta wajib diisi.',
+            'longitude.required' => 'Titik kordinat peta wajib diisi.',
+        ]);
+
+        // 2. Proses Upload Foto (Simpan ke folder storage/app/public/pengaduan)
+        if ($request->hasFile('foto_bukti')) {
+            $path = $request->file('foto_bukti')->store('pengaduan', 'public');
+            $validated['foto_bukti'] = $path;
+        }
+
+        // 3. Simpan ke Database
+        Report::create($validated);
+
+        // 4. Kembali dengan Pesan Sukses
+        return redirect()->route('home')->with('success', 'Laporan Anda telah berhasil terkirim ke sistem DLHCare.');
     }
 }
  

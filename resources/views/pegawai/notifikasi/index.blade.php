@@ -1,8 +1,27 @@
 <x-layouts::pegawai_app :title="__('Notifikasi')">
-    <flux:heading size="xl" level="1">Notifikasi, {{ $user->employee->name ?? 'Pegawai' }}</flux:heading>
-    <flux:text class="mt-2 text-base">Ini adalah daftar pemberitahuan dan pembaruan terbaru untuk Anda.</flux:text>
 
-    <flux:separator variant="subtle" />
+    <flux:card class="relative overflow-hidden border-none bg-emerald-600 text-white shadow-md p-8!">
+        {{-- Efek dekorasi background --}}
+        <div class="absolute -right-10 -top-20 opacity-10">
+            <flux:icon.globe-americas class="w-64 h-64" />
+        </div>
+
+        <div class="relative z-10">
+            <flux:subheading class="text-emerald-100 mb-1">Selamat datang kembali,</flux:subheading>
+            <flux:heading size="2xl" class="text-white mb-4">{{ $employee->name }}</flux:heading>
+
+            <div class="flex flex-wrap gap-4 text-sm mt-4">
+                <div class="flex items-center gap-1.5 bg-emerald-700/50 px-3 py-1.5 rounded-md">
+                    <flux:icon.identification class="w-4 h-4 text-emerald-300" />
+                    <span>NIP. {{ $employee->nip ?? '-' }}</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-emerald-700/50 px-3 py-1.5 rounded-md">
+                    <flux:icon.briefcase class="w-4 h-4 text-emerald-300" />
+                    <span>{{ $employee->type }} ({{ $employee->gender == 'l' ? 'Laki-laki' : 'Perempuan' }})</span>
+                </div>
+            </div>
+        </div>
+    </flux:card>
 
     {{-- Alert Sukses (Menggunakan Alpine.js yang sudah kita pelajari) --}}
     @if (session('success'))
@@ -22,7 +41,7 @@
             --}}
             <div
                 class="relative p-5 border rounded-xl flex flex-col sm:flex-row gap-4 sm:items-center transition-all 
-                                                    {{ $notif->is_read ? 'bg-white border-zinc-200' : 'bg-emerald-50/40 border-emerald-200 shadow-sm' }}">
+                                                        {{ $notif->is_read ? 'bg-white border-zinc-200' : 'bg-emerald-50/40 border-emerald-200 shadow-sm' }}">
 
                 {{-- Indikator Titik Biru untuk pesan yang belum dibaca --}}
                 @if(!$notif->is_read)

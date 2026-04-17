@@ -27,15 +27,15 @@ class RateLimitServiceProvider extends ServiceProvider
             
             // Batasi 3 kali pengiriman form per 1 Jam berdasarkan IP Address.
             // Jika Anda ingin per menit, ganti menjadi Limit::perMinute(3)
-            return Limit::perHour(10)->by($request->ip())->response(function (Request $request, array $headers) {
+            return Limit::perHour(30)->by($request->ip())->response(function (Request $request, array $headers) {
                 
                 // Pesan kustom jika user terkena limit (Mencegah error 429 bawaan yang kaku)
-                return response()->view('errors.429', [
-                    'message' => 'Anda telah mengirim terlalu banyak laporan. Demi mencegah spam, mohon tunggu beberapa saat sebelum melapor kembali.'
-                ], 429, $headers);
+                // return response()->view('errors.429', [
+                //     'message' => 'Anda telah mengirim terlalu banyak laporan. Demi mencegah spam, mohon tunggu beberapa saat sebelum melapor kembali.'
+                // ], 429, $headers);
                 
                 // ATAU jika Anda ingin me-redirect kembali ke form dengan alert error:
-                // return redirect()->back()->with('error', 'Terlalu banyak request. Silakan coba 1 jam lagi.');
+                return redirect()->route('home')->with('error', 'Anda telah mengirim terlalu banyak laporan. Mohon tunggu 1 jam lagi untuk mencegah spam.');
             });
         });
     }

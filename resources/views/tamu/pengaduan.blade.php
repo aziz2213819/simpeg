@@ -14,8 +14,8 @@
         <flux:card class="p-6 sm:p-10 shadow-lg border-emerald-100 dark:border-zinc-800">
 
             {{-- PENTING: enctype="multipart/form-data" wajib ada untuk upload file/foto --}}
-            <form action="{{ route('pengaduan.store') }}" method="POST" enctype="multipart/form-data"
-                class="space-y-10">
+            <form action="{{ route('pengaduan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-10"
+                onsubmit="return validateLokasi()">
                 @csrf
 
                 {{-- SECTION 1: Informasi Pelapor --}}
@@ -64,16 +64,16 @@
                         3. Lokasi Kejadian
                     </legend>
                     <div class="space-y-6">
-                        <flux:textarea name="lokasi_manual" label="Alamat / Patokan Manual" rows="2"
-                            placeholder="Contoh: Jl. Panglima Sudirman, tepat di bawah tiang listrik dekat pertigaan."
-                            required></flux:textarea>
+                        <flux:textarea name="lokasi_manual" label="Alamat / Patokan Manual (opsional)" rows="2"
+                            placeholder="Contoh: Jl. Panglima Sudirman, tepat di bawah tiang listrik dekat pertigaan.">
+                        </flux:textarea>
 
                         <div
                             class="border rounded-xl p-5 bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-700">
                             <div
                                 class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                                 <div>
-                                    <h4 class="font-bold text-zinc-900 dark:text-white text-sm">Peta Digital (Opsional)
+                                    <h4 class="font-bold text-zinc-900 dark:text-white text-sm">Peta Digital
                                     </h4>
                                     <p class="text-xs text-zinc-500 mt-1">Tandai titik koordinat agar truk sampah lebih
                                         mudah mencari lokasi.</p>
@@ -91,11 +91,23 @@
                                 style="z-index: 10;"></div>
 
                             {{-- Input tersembunyi untuk dikirim ke Controller --}}
-                            <input type="hidden" name="latitude" id="latitude">
-                            <input type="hidden" name="longitude" id="longitude">
+                            <input type="hidden" name="latitude" id="latitude" required>
+                            <input type="hidden" name="longitude" id="longitude" required>
+
+                            @error('latitude')
+                                <p class="text-sm font-medium text-red-500 mt-2 flex items-center gap-1">
+                                    <flux:icon.exclamation-circle class="w-4 h-4" />
+                                    {{ $message }}
+                                </p>
+                            @enderror
 
                             <p id="location-status" class="text-xs font-medium text-emerald-600 mt-2 hidden">
                                 ✓ Koordinat berhasil ditandai.
+                            </p>
+                            <p id="error-map"
+                                class="text-sm font-medium text-red-500 mt-2 hidden flex items-center gap-1">
+                                <flux:icon.exclamation-circle class="w-4 h-4" />
+                                Anda wajib menandai lokasi kejadian pada peta atau gunakan lokasi saat ini!
                             </p>
                         </div>
                     </div>
@@ -117,6 +129,33 @@
         </flux:card>
     </div>
     <script>
+        function validateLokasi() {
+            const lat = document.getElementById('latitude').value;
+            const lng = document.getElementById('longitude').value;
+            const errorText = document.getElementById('error-map');
+            const mapDiv = document.getElementById('map');
+
+            // Jika user belum klik peta (koordinat kosong)
+            if (!lat || !lng) {
+                // Munculkan teks error
+                if (errorText) errorText.classList.remove('hidden');
+
+                // Beri border merah menyala pada peta
+                if (mapDiv) {
+                    mapDiv.classList.add('border-red-500', 'border-2');
+                    mapDiv.classList.remove('border-zinc-300', 'dark:border-zinc-600');
+
+                    // Arahkan layar otomatis ke arah peta
+                    mapDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+
+                // TAHAN form agar tidak terkirim
+                return false;
+            }
+
+            // IZINKAN form terkirim jika koordinat sudah ada
+            return true;
+        }
         // Gunakan fungsi terpisah agar bisa dipanggil ulang jika navigasi via Livewire
         function initLeafletMap() {
             // Cek apakah elemen map ada di halaman ini
@@ -125,7 +164,6 @@
 
             // Mencegah error "Map container is already initialized" jika berpindah halaman
             if (L.DomUtil.hasClass(mapContainer, 'leaflet-container')) {
-                // Jika sudah ada, jangan diinisialisasi ulang
                 return;
             }
 
@@ -146,6 +184,7 @@
             const latInput = document.getElementById('latitude');
             const lngInput = document.getElementById('longitude');
             const statusText = document.getElementById('location-status');
+            const errorText = document.getElementById('error-map');
 
             // Fungsi untuk menaruh/memindahkan marker
             function updateMarker(lat, lng) {
@@ -161,6 +200,13 @@
 
                 // Munculkan teks sukses
                 statusText.classList.remove('hidden');
+                if (errorText) {
+                    errorText.classList.add('hidden');
+                }
+                if (mapContainer) {
+                    mapContainer.classList.remove('border-red-500', 'border-2');
+                    mapContainer.classList.add('border-zinc-300', 'dark:border-zinc-600');
+                }
             }
 
             // Fitur 1: Pilih lokasi dengan mengklik Peta

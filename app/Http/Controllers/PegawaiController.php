@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -17,7 +18,24 @@ class PegawaiController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return view('pegawai.dashboard', compact('user'));
+        $employee = $user->employee;
+
+        // 1. Ambil 5 notifikasi terbaru
+        $recentNotifs = Notification::where('employee_id', $employee->id)
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // 2. Hitung Masa Kerja (Contoh format: 3 Tahun 2 Bulan)
+        $masaKerja = '-';
+        if ($employee->tmt_start) {
+            $tmt = Carbon::parse($employee->tmt_start);
+            $now = Carbon::now();
+            $diff = $tmt->diff($now);
+            $masaKerja = $diff->y . ' Tahun ' . $diff->m . ' Bulan';
+        }
+
+        return view('pegawai.dashboard', compact('user', 'employee', 'recentNotifs', 'masaKerja'));
     }
 
     public function profile()
@@ -122,6 +140,7 @@ class PegawaiController extends Controller
     public function notification()
     {
         $user = Auth::user();
+        $employee = $user->employee;
 
         // Ambil notifikasi khusus untuk ID pegawai milik user ini
         // Urutkan dari yang paling baru (latest)
@@ -129,18 +148,18 @@ class PegawaiController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('pegawai.notifikasi.index', compact('user', 'notifications'));
+        return view('pegawai.notifikasi.index', compact('user', 'notifications', 'employee'));
     }
 
-    public function notificationShow(Notification $notification)
-    {
-        // Keamanan: Pastikan notifikasi ini benar-benar milik pegawai yang login
-        if ($notification->employee->id !== Auth::user()->employee->id) {
-            abort(403, 'Anda tidak memiliki akses ke notifikasi ini.');
-        }
+    // public function notificationShow(Notification $notification)
+    // {
+    //     // Keamanan: Pastikan notifikasi ini benar-benar milik pegawai yang login
+    //     if ($notification->employee->id !== Auth::user()->employee->id) {
+    //         abort(403, 'Anda tidak memiliki akses ke notifikasi ini.');
+    //     }
 
-        $notification->update(['is_read' => true]);
+    //     $notification->update(['is_read' => true]);
 
-        return back()->with('success', 'Notifikasi ditandai sudah dibaca.');
-    }
+    //     return back()->with('success', 'Notifikasi ditandai sudah dibaca.');
+    // }
 }
