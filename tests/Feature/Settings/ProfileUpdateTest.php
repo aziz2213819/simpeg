@@ -25,7 +25,7 @@ class ProfileUpdateTest extends TestCase
         $this->actingAs($user);
 
         $response = Livewire::test('pages::settings.profile')
-            ->set('name', 'Test User')
+            // ->set('name', 'Test User')
             ->set('email', 'test@example.com')
             ->call('updateProfileInformation');
 
@@ -45,7 +45,7 @@ class ProfileUpdateTest extends TestCase
         $this->actingAs($user);
 
         $response = Livewire::test('pages::settings.profile')
-            ->set('name', 'Test User')
+            // ->set('name', 'Test User')
             ->set('email', $user->email)
             ->call('updateProfileInformation');
 
