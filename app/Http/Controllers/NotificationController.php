@@ -14,6 +14,7 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $type = $request->input('type');
 
         $notifications = Notification::with('employee')
             ->when($search, function ($query) use ($search) {
@@ -26,11 +27,14 @@ class NotificationController extends Controller
                       });
                 });
             })
+            ->when($type, function ($query) use ($type) {
+                return $query->where('type', $type);
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.notifikasi.index', compact('notifications', 'search'));
+        return view('admin.notifikasi.index', compact('notifications', 'search', 'type'));
     }
 
     /**

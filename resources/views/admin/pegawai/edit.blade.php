@@ -68,25 +68,35 @@
                         <flux:input id="tmt_akhir" type="date" name="tmt_end"
                             label="TMT Akhir (Kosongkan jika aktif terus)"
                             value="{{ old('tmt_end', $pegawai->tmt_end ? \Carbon\Carbon::parse($pegawai->tmt_end)->format('Y-m-d') : '') }}" />
+                        
+                        <flux:input id="tmt_kgb" type="date" name="tmt_kgb"
+                            label="TMT Kenaikan Gaji Berkala"
+                            value="{{ old('tmt_kgb', $pegawai->tmt_kgb ? \Carbon\Carbon::parse($pegawai->tmt_kgb)->format('Y-m-d') : '') }}" />
 
                         {{-- Foreign Keys --}}
-                        <flux:select name="grade_id" label="Golongan">
+                        <flux:select name="rank_grade_id" label="Pangkat/Gol">
                             <option value="">-- Tidak Ada / Belum Ditentukan --</option>
-                            @isset($grades)
-                                @foreach($grades as $grade)
-                                    <option value="{{ $grade->id }}" {{ old('grade_id', $pegawai->grade_id) == $grade->id ? 'selected' : '' }}>{{ $grade->grade_code }}</option>
+                            @isset($rank_grades)
+                                @foreach($rank_grades as $rank_grade)
+                                    <option value="{{ $rank_grade->id }}" {{ old('rank_grade_id', $pegawai->rank_grade_id) == $rank_grade->id ? 'selected' : '' }}>
+                                        @if ($rank_grade->rank_name === null)
+                                            {{ $rank_grade->grade_code }}
+                                        @else
+                                            {{ $rank_grade->rank_name . " - " . "(" .  $rank_grade->grade_code . ")" }}
+                                        @endif
+                                    </option>
                                 @endforeach
                             @endisset
                         </flux:select>
 
-                        <flux:select name="rank_id" label="Pangkat">
+                        {{-- <flux:select name="rank_id" label="Pangkat">
                             <option value="">-- Tidak Ada / Belum Ditentukan --</option>
                             @isset($ranks)
                                 @foreach($ranks as $rank)
                                     <option value="{{ $rank->id }}" {{ old('rank_id', $pegawai->rank_id) == $rank->id ? 'selected' : '' }}>{{ $rank->rank_name }}</option>
                                 @endforeach
                             @endisset
-                        </flux:select>
+                        </flux:select> --}}
 
                         <flux:select name="position_id" label="Jabatan">
                             <option value="">-- Tidak Ada / Belum Ditentukan --</option>

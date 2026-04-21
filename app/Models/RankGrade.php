@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Grade extends Model
+class RankGrade extends Model
 {
     protected $fillable = [
-        'grade_code'
+        'grade_code',
+        'rank_name'
     ];
 
     public function employees()

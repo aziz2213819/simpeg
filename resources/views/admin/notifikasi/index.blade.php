@@ -6,19 +6,44 @@
 
         <flux:card>
             {{-- Header & Search Form --}}
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+
                 <flux:heading size="lg">Data Notifikasi Sistem</flux:heading>
 
-                <div class="flex w-full sm:w-auto items-center gap-2">
-                    <form action="{{ route('notifikasi.index') }}" method="GET" class="w-full sm:w-64 flex gap-2">
-                        <flux:input name="search" type="search" value="{{ request('search') }}"
-                            placeholder="Cari Nama atau Judul..." />
-                        <flux:button type="submit">Cari</flux:button>
+                {{-- Wrapper Kanan: Berubah jadi tumpuk di HP, berjajar di Layar Besar --}}
+                <div class="flex flex-col sm:flex-row w-full lg:w-auto items-start sm:items-center gap-3">
+
+                    <form action="{{ route('notifikasi.index') }}" method="GET"
+                        class="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
+
+                        {{-- Dropdown --}}
+                        <div class="w-full sm:w-40">
+                            <flux:select name="type" onchange="this.form.submit()">
+                                <option value="">Semua Kategori</option>
+                                <option value="pangkat" {{ request('type') == 'pangkat' ? 'selected' : '' }}>Kenaikan
+                                    Pangkat</option>
+                                <option value="gaji_berkala" {{ request('type') == 'gaji_berkala' ? 'selected' : '' }}>
+                                    Gaji Berkala</option>
+                                <option value="pensiun" {{ request('type') == 'pensiun' ? 'selected' : '' }}>Pensiun
+                                </option>
+                            </flux:select>
+                        </div>
+
+                        {{-- Input Search & Tombol Cari --}}
+                        <div class="flex w-full sm:w-auto gap-2">
+                            <flux:input name="search" type="search" value="{{ request('search') }}"
+                                placeholder="Cari Nama atau Judul..." class="w-full sm:w-56" />
+                            <flux:button type="submit">Cari</flux:button>
+                        </div>
+
                     </form>
 
-                    <flux:button href="{{ route('notifikasi.create') }}" wire:navigate>
-                        Kirim Notifikasi Manual
+                    {{-- Tombol Tambah Manual --}}
+                    <flux:button href="{{ route('notifikasi.create') }}" class="w-full sm:w-auto"
+                        wire:navigate>
+                        Kirim Manual
                     </flux:button>
+
                 </div>
             </div>
 

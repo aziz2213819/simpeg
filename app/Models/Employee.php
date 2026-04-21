@@ -14,10 +14,10 @@ class Employee extends Model
         'status',
         'tmt_start',
         'tmt_end',
+        'tmt_kgb',
         'type',
         'position_id',
-        'grade_id',
-        'rank_id',
+        'rankgrade_id',
     ];
 
     public function initials(): string
@@ -48,14 +48,9 @@ class Employee extends Model
         return $this->belongsTo(Position::class);
     }
 
-    public function grade()
+    public function rankGrade()
     {
-        return $this->belongsTo(Grade::class);
-    }
-
-    public function rank()
-    {
-        return $this->belongsTo(Rank::class);
+        return $this->belongsTo(RankGrade::class);
     }
 
     public function notifications() 

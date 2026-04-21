@@ -20,18 +20,13 @@ return new class extends Migration
             $table->enum('status', ['active', 'nonactive'])->default('active');
             $table->date('tmt_start')->default(now());
             $table->date('tmt_end')->nullable();
+            $table->date('tmt_kgb')->nullable();
             $table->enum('type', ['Non ASN', 'ASN'])->default('Non ASN');
 
             // RELASI
-            $table->foreignId('grade_id')
+            $table->foreignId('rank_grade_id')
                 ->nullable()
-                ->constrained('grades')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
-            
-            $table->foreignId('rank_id')
-                ->nullable()
-                ->constrained('ranks')
+                ->constrained('rank_grades')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
 

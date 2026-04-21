@@ -17,11 +17,15 @@
 
                         {{-- Dropdown Filter Golongan --}}
                         <div class="w-full sm:w-48">
-                            <flux:select name="grade_id" onchange="this.form.submit()">
-                                <option value="">Semua Golongan</option>
-                                @foreach($grades as $grade)
-                                    <option value="{{ $grade->id }}" {{ request('grade_id') == $grade->id ? 'selected' : '' }}>
-                                        {{ $grade->grade_code }}
+                            <flux:select name="rank_grade_id" onchange="this.form.submit()">
+                                <option value="">Semua Pangkat/Gol</option>
+                                @foreach($rankGrades as $rankGrade)
+                                    <option value="{{ $rankGrade->id }}" {{ request('rank_grade_id') == $rankGrade->id ? 'selected' : '' }}>
+                                        @if ($rankGrade->rank_name === null)
+                                            {{ $rankGrade->grade_code }}
+                                        @else
+                                            {{ $rankGrade->rank_name . " - " . "(" .  $rankGrade->grade_code . ")" }}
+                                        @endif
                                     </option>
                                 @endforeach
                             </flux:select>

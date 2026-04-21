@@ -11,7 +11,14 @@ class Notification extends Model
         'type',
         'title',
         'message',
+        'sk_file_path',
+        'submitted_at',
         'is_read',
+    ];
+
+    protected $casts = [
+        // Pastikan kolom ini di-cast sebagai datetime
+        'submitted_at' => 'datetime',
     ];
 
     public function employee()

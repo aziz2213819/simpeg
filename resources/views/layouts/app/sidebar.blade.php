@@ -23,13 +23,9 @@
                     :current="request()->routeIs('jabatan.index')" wire:navigate>
                     {{ __('Jabatan') }}
                 </flux:sidebar.item>
-                <flux:sidebar.item icon="rectangle-stack" :href="route('golongan.index')"
-                    :current="request()->routeIs('golongan.index')" wire:navigate>
-                    {{ __('Golongan') }}
-                </flux:sidebar.item>
-                <flux:sidebar.item icon="check-badge" :href="route('pangkat.index')"
+                <flux:sidebar.item icon="rectangle-stack" :href="route('pangkat.index')"
                     :current="request()->routeIs('pangkat.index')" wire:navigate>
-                    {{ __('Pangkat') }}
+                    {{ __('Pangkat/Gol') }}
                 </flux:sidebar.item>
                 <flux:sidebar.item icon="users" :href="route('pegawai.index')"
                     :current="request()->routeIs('pegawai.index')" wire:navigate>

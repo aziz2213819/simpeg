@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
@@ -151,15 +152,47 @@ class PegawaiController extends Controller
         return view('pegawai.notifikasi.index', compact('user', 'notifications', 'employee'));
     }
 
-    // public function notificationShow(Notification $notification)
-    // {
-    //     // Keamanan: Pastikan notifikasi ini benar-benar milik pegawai yang login
-    //     if ($notification->employee->id !== Auth::user()->employee->id) {
-    //         abort(403, 'Anda tidak memiliki akses ke notifikasi ini.');
-    //     }
+    public function notificationShow(Notification $notification)
+    {
+        if ($notification->type != 'pangkat') {
+            return redirect()->route('pegawai.notifikasi')->with('error', 'Notifikasi ini tidak dapat dibuka.');
+        }
 
-    //     $notification->update(['is_read' => true]);
+        return view('pegawai.notifikasi.show', compact('notification'));
+    }
 
-    //     return back()->with('success', 'Notifikasi ditandai sudah dibaca.');
-    // }
+    public function notificationUpdate(Request $request, Notification $notification)
+    {
+        // Pastikan hanya pegawai yang bersangkutan yang bisa upload
+        if ($notification->employee_id !== auth()->user()->employee->id) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        if ($notification->type != 'pangkat') {
+            return redirect()->route('pegawai.notifikasi')->with('error', 'Notifikasi ini tidak dapat dibuka.');
+        }
+
+        $request->validate([
+            // Hanya izinkan PDF atau Gambar, maksimal 5MB
+            'sk_file' => 'required|mimes:pdf,jpg,jpeg,png|max:5120', 
+        ], [
+            'sk_file.required' => 'Anda harus memilih file terlebih dahulu.',
+            'sk_file.mimes' => 'Format file harus PDF, JPG, atau PNG.',
+        ]);
+
+        // Hapus file lama jika pegawai mengunggah ulang (opsional, agar storage tidak penuh)
+        if ($notification->sk_file_path) {
+            Storage::disk('public')->delete($notification->sk_file_path);
+        }
+
+        // Simpan ke folder storage/app/public/sk_dokumen
+        $path = $request->file('sk_file')->store('sk_dokumen', 'public');
+
+        $notification->update([
+            'sk_file_path' => $path,
+            'submitted_at' => now(),
+            'is_read' => true,
+        ]);
+        return back()->with('status', 'Berkas SK berhasil diunggah dan dikirim ke sistem dan notifikasi ditandai sudah dibaca.');
+    }
 }

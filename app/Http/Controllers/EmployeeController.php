@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use App\Models\Grade;
 use App\Models\Position;
-use App\Models\Rank;
+use App\Models\RankGrade;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,23 +17,24 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $grade_id = $request->input('grade_id');
-        $grades = Grade::orderBy('grade_code', 'asc')->get();
+        $rank_grade_id = $request->input('rank_grade_id');
+        $rankGrades = RankGrade::orderBy('created_at', 'asc')->get();
         $employees = Employee::query()
+            ->with(['rankGrade'])
             ->when($search, function ($query, $search) {
                 return $query->where(function($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                     ->orWhere('nip', 'like', "%{$search}%");
                 });
             })
-            ->when($grade_id, function ($query, $grade_id) {
-                // Filter berdasarkan grade_id jika user memilih golongan
-                return $query->where('grade_id', $grade_id);
+            ->when($rank_grade_id, function ($query, $rank_grade_id) {
+                // Filter berdasarkan rank_grade_id jika user memilih pangkat
+                return $query->where('rank_grade_id', $rank_grade_id);
             })
             ->latest()
             ->paginate(10)
             ->withQueryString();
-        return view('admin.pegawai.index', compact('employees', 'search', 'grade_id', 'grades'));
+        return view('admin.pegawai.index', compact('employees', 'search', 'rank_grade_id', 'rankGrades'));
     }
 
     /**
@@ -42,10 +42,9 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        $grades = Grade::all();
-        $ranks = Rank::all();
+        $rank_grades = RankGrade::all();
         $positions = Position::all();
-        return view('admin.pegawai.create', compact('grades', 'ranks', 'positions'));
+        return view('admin.pegawai.create', compact('rank_grades', 'positions'));
     }
 
     /**
@@ -67,6 +66,7 @@ class EmployeeController extends Controller
             'status'        => 'required|string',
             'tmt_start'     => 'required|date',
             'tmt_end'       => 'nullable|date|after_or_equal:tmt_start',
+            'tmt_kgb'       => 'required|date|after_or_equal:tmt_start',
             'type'          => 'required|in:ASN,Non ASN',
             
             // Foreign Keys (Opsional tapi disarankan)
@@ -84,7 +84,7 @@ class EmployeeController extends Controller
             'max'             => ':attribute maksimal berisi :max karakter.',
             'digits'          => ':attribute harus berupa angka dan tepat :digits digit.',
             'date'            => 'Format :attribute harus berupa tanggal yang valid.',
-            'after_or_equal'  => 'Tanggal Berakhir (TMT End) harus sama dengan atau setelah TMT Start.',
+            'after_or_equal'  => 'Tanggal :attribute harus sama dengan atau setelah TMT Start.',
             'in'              => 'Pilihan :attribute tidak valid.',
             'exists'          => 'Data :attribute yang dipilih tidak ditemukan di database.',
         ];
@@ -96,6 +96,7 @@ class EmployeeController extends Controller
             'gender'        => 'Jenis Kelamin',
             'tmt_start'     => 'TMT Awal',
             'tmt_end'       => 'TMT Akhir',
+            'tmt_kgb'       => 'TMT KGB',
             'type'          => 'Tipe Pegawai',
             'grade_id'      => 'Golongan',
             'rank_id'       => 'Pangkat',
@@ -115,6 +116,7 @@ class EmployeeController extends Controller
                 'status'        => $validatedData['status'],
                 'tmt_start'     => $validatedData['tmt_start'],
                 'tmt_end'       => $validatedData['tmt_end'] ?? null,
+                'tmt_kgb'       => $validatedData['tmt_kgb'],
                 'type'          => $validatedData['type'],
                 'grade_id'      => $validatedData['grade_id'] ?? null,
                 'rank_id'       => $validatedData['rank_id'] ?? null,
@@ -144,10 +146,9 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $pegawai)
     {
-        $grades = Grade::all();
-        $ranks = Rank::all();
+        $rank_grades = RankGrade::all();
         $positions = Position::all();   
-        return view('admin.pegawai.edit', compact('pegawai', 'grades', 'ranks', 'positions'));
+        return view('admin.pegawai.edit', compact('pegawai', 'rank_grades', 'positions'));
     }
 
     /**
@@ -165,6 +166,7 @@ class EmployeeController extends Controller
             'status'        => 'required|string',
             'tmt_start'     => 'required|date',
             'tmt_end'       => 'nullable|date|after_or_equal:tmt_start',
+            'tmt_kgb'       => 'required|date|after_or_equal:tmt_start',
             'type'          => 'required|string',
             'grade_id'      => 'nullable|exists:grades,id',
             'rank_id'       => 'nullable|exists:ranks,id',
@@ -174,12 +176,26 @@ class EmployeeController extends Controller
         $messages = [
             'required'        => 'Kolom :attribute wajib diisi.',
             'unique'          => ':attribute ini sudah dipakai orang lain.',
-            'after_or_equal'  => 'TMT Akhir harus sama dengan atau setelah TMT Awal.',
+            'after_or_equal'  => 'Tanggal :attribute harus sama dengan atau setelah TMT Awal.',
             'min'             => ':attribute minimal :min karakter.',
             'in'              => 'Pilihan pada kolom :attribute tidak valid.',
         ];
 
-        $validatedData = $request->validate($rules, $messages);
+        $attributes = [
+            'nip'           => 'NIP',
+            'name'          => 'Nama',
+            'birth_date'    => 'Tanggal Lahir',
+            'gender'        => 'Jenis Kelamin',
+            'tmt_start'     => 'TMT Awal',
+            'tmt_end'       => 'TMT Akhir',
+            'tmt_kgb'       => 'TMT Kenaikan Gaji Berkala',
+            'type'          => 'Tipe Pegawai',
+            'grade_id'      => 'Golongan',
+            'rank_id'       => 'Pangkat',
+            'position_id'   => 'Jabatan',
+        ];
+
+        $validatedData = $request->validate($rules, $messages, $attributes);
 
         DB::transaction(function () use ($validatedData, $pegawai) {
             // 1. Update Biodata Pegawai
@@ -191,6 +207,7 @@ class EmployeeController extends Controller
                 'status'        => $validatedData['status'],
                 'tmt_start'     => $validatedData['tmt_start'],
                 'tmt_end'       => $validatedData['tmt_end'] ?? null,
+                'tmt_kgb'       => $validatedData['tmt_kgb'],
                 'type'          => $validatedData['type'],
                 'grade_id'      => $validatedData['grade_id'] ?? null,
                 'rank_id'       => $validatedData['rank_id'] ?? null,

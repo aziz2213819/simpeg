@@ -64,21 +64,28 @@
 
                         <flux:input id="tmt_akhir" type="date" name="tmt_end"
                             label="TMT Akhir (Kosongkan jika aktif terus)" value="{{ old('tmt_end') }}" />
+                        
+                        <flux:input id="tmt_kgb" type="date" name="tmt_kgb"
+                            label="TMT Kenaikan Gaji Berkala" value="{{ old('tmt_kgb') }}" />
 
                         {{-- Foreign Keys --}}
                         {{-- Catatan: Pastikan Anda mengirim $grades, $ranks, dan $positions dari Controller --}}
-                        <flux:select name="grade_id" label="Golongan">
+                        <flux:select name="rank_grade_id" label="Pangkat/Gol">
                             <option value="">-- Tidak Ada / Belum Ditentukan --</option>
-                            @isset($grades)
-                                @foreach($grades as $grade)
-                                    <option value="{{ $grade->id }}" {{ old('grade_id') == $grade->id ? 'selected' : '' }}>
-                                        {{ $grade->grade_code }}
+                            @isset($rank_grades)
+                                @foreach($rank_grades as $rank_grade)
+                                    <option value="{{ $rank_grade->id }}" {{ old('rank_grade_id') == $rank_grade->id ? 'selected' : '' }}>
+                                        @if ($rank_grade->rank_name === null)
+                                            {{ $rank_grade->grade_code }}
+                                        @else
+                                            {{ $rank_grade->rank_name . " - " . "(" .  $rank_grade->grade_code . ")" }}
+                                        @endif
                                     </option>
                                 @endforeach
                             @endisset
                         </flux:select>
 
-                        <flux:select name="rank_id" label="Pangkat">
+                        {{-- <flux:select name="rank_id" label="Pangkat">
                             <option value="">-- Tidak Ada / Belum Ditentukan --</option>
                             @isset($ranks)
                                 @foreach($ranks as $rank)
@@ -87,7 +94,7 @@
                                     </option>
                                 @endforeach
                             @endisset
-                        </flux:select>
+                        </flux:select> --}}
 
                         <flux:select name="position_id" label="Jabatan">
                             <option value="">-- Tidak Ada / Belum Ditentukan --</option>

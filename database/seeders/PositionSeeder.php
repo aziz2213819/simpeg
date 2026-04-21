@@ -20,7 +20,7 @@ class PositionSeeder extends Seeder
             'Kabid Pengelolaan Sampah Dan Limbah B3',
             'Pengendali Dampak Lingkungan Ahli Muda',
             'Ka. Subbag Keuangan',
-            'Ka.Subbag Perencanaan  Dan Evaluasi',
+            'Ka.Subbag Perencanaan Dan Evaluasi',
             'Kasubag Umum Dan Kepegawaian',
             'Kepala Upt Pengelolaan Sampah',
             'Penelaah Teknis Kebijakan',

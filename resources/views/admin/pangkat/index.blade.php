@@ -16,6 +16,7 @@
         {{-- Table --}}
         <flux:table>
             <flux:table.columns>
+                <flux:table.column>Nama Golongan</flux:table.column>
                 <flux:table.column>Nama Pangkat</flux:table.column>
                 <flux:table.column>Jumlah Pegawai</flux:table.column>
                 <flux:table.column class="text-right">Aksi</flux:table.column>
@@ -25,7 +26,15 @@
                 @foreach($ranks as $rank)
                     <flux:table.row wire:key="row-{{ $rank->id }}">
                         <flux:table.cell>
-                            {{ $rank->rank_name }}
+                            {{ $rank->grade_code }}
+                        </flux:table.cell>
+
+                        <flux:table.cell>
+                            @if ($rank->rank_name === null)
+                                <span class="italic text-gray-500">Belum Ditentukan</span>
+                            @else
+                                {{ $rank->rank_name }}
+                            @endif
                         </flux:table.cell>
 
                         <flux:table.cell>
@@ -62,18 +71,26 @@
     <flux:modal wire:model="showModal" class="md:w-1/2">
 
         <flux:heading size="lg">
-            {{ $isEdit ? 'Edit Pangkat' : 'Tambah Pangkat' }}
+            {{ $isEdit ? 'Edit Pangkat/Gol' : 'Tambah Pangkat/Gol' }}
         </flux:heading>
 
         <div class="space-y-4 mt-4">
 
             <flux:input label="Nama Pangkat" wire:model.defer="rank_name" />
 
+            @error('grade_code')
+                <div class="text-red-500 text-sm">
+                    {{ $message }}
+                </div>
+            @enderror
+
             @error('rank_name')
                 <div class="text-red-500 text-sm">
                     {{ $message }}
                 </div>
             @enderror
+
+            <flux:input label="Golongan" wire:model.defer="grade_code" />
 
             <div class="flex justify-end gap-2 mt-6">
                 <flux:button variant="ghost" wire:click="closeModal">

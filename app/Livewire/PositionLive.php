@@ -59,12 +59,21 @@ class PositionLive extends Component
             ]);
         }
 
+        session()->flash('success', $this->isEdit ? 'Data Jabatan berhasil diperbarui!' : 'Data berhasil ditambahkan!');
+
         $this->closeModal();
     }
 
     public function delete($id)
     {
-        Position::findOrFail($id)->delete();
+        $position = Position::withCount('employees')->findOrFail($id);
+
+        if ($position->employees_count > 0) {
+            session()->flash('error', "Gagal! Jabatan {$position->position_name} tidak bisa dihapus karena masih digunakan oleh {$position->employees_count} pegawai.");
+            return;
+        }
+        $position->delete();
+        session()->flash('success', 'Data Jabatan berhasil dihapus.');
     }
 
     public function closeModal()

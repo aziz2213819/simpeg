@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grades', function (Blueprint $table) {
+        Schema::create('rank_grades', function (Blueprint $table) {
             $table->id();
             $table->string('grade_code')->unique();
+            $table->string('rank_name')->nullable();
             $table->timestamps();
         });
     }

@@ -103,91 +103,126 @@
                                 @endif
                             </flux:table.cell>
 
-                            {{-- Aksi (Ubah Status) --}}
+                            {{-- Aksi (Detail & Ubah Status) --}}
                             <flux:table.cell class="flex gap-2">
+
                                 <flux:modal.trigger name="update-status-{{ $report->id }}">
-                                    <flux:button size="sm" class="cursor-pointer" variant="outline">Tindak Lanjut</flux:button>
+                                    <flux:button size="sm" variant="outline" icon="eye"
+                                        onclick="loadMap({{ $report->id }}, {{ $report->latitude ?? 'null' }}, {{ $report->longitude ?? 'null' }})">
+                                        Lihat & Proses</flux:button>
                                 </flux:modal.trigger>
 
                                 {{-- Modal All-in-One (Lebar disesuaikan agar lega) --}}
                                 <flux:modal name="update-status-{{ $report->id }}" class="md:w-3xl">
-                                    
+
                                     {{-- Header Modal --}}
                                     <div class="border-b border-zinc-200 dark:border-zinc-700 pb-4 mb-6">
-                                        <flux:heading size="lg">Detail Laporan #{{ str_pad($report->id, 4, '0', STR_PAD_LEFT) }}</flux:heading>
-                                        <flux:subheading>Dilaporkan pada {{ $report->created_at->format('d F Y - H:i') }} WIB</flux:subheading>
+                                        <flux:heading size="lg">Detail Laporan
+                                            #{{ str_pad($report->id, 4, '0', STR_PAD_LEFT) }}</flux:heading>
+                                        <flux:subheading>Dilaporkan pada {{ $report->created_at->format('d F Y - H:i') }}
+                                            WIB</flux:subheading>
                                     </div>
 
                                     {{-- Isi Modal (Grid 2 Kolom) --}}
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        
+
                                         {{-- Kolom Kiri: Informasi Detail --}}
                                         <div class="space-y-4">
                                             <div>
-                                                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Nama Pelapor</span>
-                                                <p class="font-bold text-zinc-900 dark:text-white mt-1">{{ $report->nama_pelapor }}</p>
+                                                <span
+                                                    class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Nama
+                                                    Pelapor</span>
+                                                <p class="font-bold text-zinc-900 dark:text-white mt-1">
+                                                    {{ $report->nama_pelapor }}
+                                                </p>
                                                 <p class="text-sm text-zinc-500">{{ $report->kontak ?? 'Tanpa kontak' }}</p>
                                             </div>
 
                                             <div>
-                                                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Deskripsi Kejadian</span>
-                                                <div class="mt-1 p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg text-sm text-zinc-700 dark:text-zinc-300 border border-zinc-100 dark:border-zinc-700 max-h-32 overflow-y-auto">
+                                                <span
+                                                    class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Deskripsi
+                                                    Kejadian</span>
+                                                <div
+                                                    class="mt-1 p-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg text-sm text-zinc-700 dark:text-zinc-300 border border-zinc-100 dark:border-zinc-700 max-h-32 overflow-y-auto">
                                                     {{ $report->deskripsi }}
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Patokan Lokasi</span>
-                                                <p class="text-sm text-zinc-900 dark:text-white mt-1 font-medium">{{ $report->lokasi_manual }}</p>
-                                                
+                                                <span
+                                                    class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Lokasi
+                                                    & Peta</span>
+                                                <p class="text-sm text-zinc-900 dark:text-white mt-1 font-medium mb-3">
+                                                    {{ $report->lokasi_manual }}
+                                                </p>
+
+                                                {{-- Container Peta dengan ID Unik --}}
                                                 @if($report->latitude && $report->longitude)
-                                                    <flux:button size="sm" variant="subtle" class="mt-2 text-emerald-600 w-full" 
-                                                        href="https://maps.google.com/?q={{ $report->latitude }},{{ $report->longitude }}" target="_blank">
+                                                    <div id="map-container-{{ $report->id }}"
+                                                        class="h-48 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 z-10 mb-3">
+                                                    </div>
+
+                                                    <flux:button size="sm" variant="subtle" class="text-emerald-600 w-full"
+                                                        href="https://maps.google.com/?q={{ $report->latitude }},{{ $report->longitude }}"
+                                                        target="_blank">
                                                         <flux:icon.map-pin class="w-4 h-4 mr-2" /> Buka Navigasi Google Maps
                                                     </flux:button>
+                                                @else
+                                                    <div
+                                                        class="p-4 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-center text-xs text-zinc-500 border border-dashed border-zinc-300">
+                                                        Pelapor tidak melampirkan titik koordinat.
+                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
 
                                         {{-- Kolom Kanan: Foto & Form Status --}}
                                         <div class="space-y-6">
-                                            
                                             {{-- Penampil Foto --}}
                                             <div>
-                                                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Foto Bukti</span>
+                                                <span
+                                                    class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Foto
+                                                    Bukti</span>
                                                 @if($report->foto_bukti)
-                                                    <a href="{{ asset('storage/' . $report->foto_bukti) }}" target="_blank" class="block mt-1 relative group">
-                                                        <img src="{{ asset('storage/' . $report->foto_bukti) }}" alt="Foto Laporan" class="w-full h-40 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
-                                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 rounded-lg transition flex items-center justify-center">
-                                                            <span class="text-white text-sm font-medium">Klik untuk perbesar</span>
+                                                    <a href="{{ asset('storage/' . $report->foto_bukti) }}" target="_blank"
+                                                        class="block mt-1 relative group">
+                                                        <img src="{{ asset('storage/' . $report->foto_bukti) }}"
+                                                            alt="Foto Laporan"
+                                                            class="w-full h-40 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
+                                                        <div
+                                                            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 rounded-lg transition flex items-center justify-center">
+                                                            <span class="text-white text-sm font-medium">Klik untuk
+                                                                perbesar</span>
                                                         </div>
                                                     </a>
                                                 @else
-                                                    <div class="mt-1 w-full h-40 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center rounded-lg border border-dashed border-zinc-300">
+                                                    <div
+                                                        class="mt-1 w-full h-40 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center rounded-lg border border-dashed border-zinc-300">
                                                         <span class="text-zinc-400 text-sm">Tidak ada foto terlampir</span>
                                                     </div>
                                                 @endif
                                             </div>
 
                                             {{-- Form Kendali Status --}}
-                                            <form action="{{ route('admin.pengaduan.status', $report->id) }}" method="POST" class="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/50">
+                                            <form action="{{ route('admin.pengaduan.status', $report->id) }}" method="POST"
+                                                class="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/50">
                                                 @csrf
                                                 @method('PATCH')
-                                                
+
                                                 <flux:select name="status" label="Tindak Lanjut (Ubah Status)">
-                                                    <option value="pending" {{ $report->status == 'pending' ? 'selected' : '' }}>🔴 Pending (Belum Ditangani)</option>
-                                                    <option value="proses" {{ $report->status == 'proses' ? 'selected' : '' }}>🔵 Diproses (Petugas OTW)</option>
-                                                    <option value="selesai" {{ $report->status == 'selesai' ? 'selected' : '' }}>🟢 Selesai (Sudah Bersih)</option>
+                                                    <option value="pending" {{ $report->status == 'pending' ? 'selected' : '' }}>🔴 Pending</option>
+                                                    <option value="proses" {{ $report->status == 'proses' ? 'selected' : '' }}>🔵 Diproses</option>
+                                                    <option value="selesai" {{ $report->status == 'selesai' ? 'selected' : '' }}>🟢 Selesai</option>
                                                 </flux:select>
 
-                                                <div class="flex justify-end gap-2 mt-4 pt-4 border-t border-emerald-200 dark:border-emerald-800">
+                                                <div
+                                                    class="flex justify-end gap-2 mt-4 pt-4 border-t border-emerald-200 dark:border-emerald-800">
                                                     <flux:modal.close>
                                                         <flux:button variant="ghost">Tutup</flux:button>
                                                     </flux:modal.close>
                                                     <flux:button type="submit" variant="primary">Simpan Status</flux:button>
                                                 </div>
                                             </form>
-
                                         </div>
                                     </div>
                                 </flux:modal>
@@ -199,7 +234,7 @@
                                 @if($search)
                                     Tidak ada laporan yang sesuai dengan pencarian Anda.
                                 @else
-                                    Belum ada data pengaduan masuk. Lingkungan aman! 🍃
+                                    Belum ada data pengaduan masuk.
                                 @endif
                             </flux:table.cell>
                         </flux:table.row>
@@ -212,4 +247,48 @@
             </div>
         </flux:card>
     </div>
+    <script>
+        // Menyimpan instance peta yang sedang aktif agar tidak double-render
+        let activeMapInstances = {};
+
+        function loadMap(reportId, lat, lng) {
+            // Jika koordinat kosong (null), jangan lakukan apa-apa
+            if (!lat || !lng) return;
+
+            const mapContainerId = 'map-container-' + reportId;
+            const container = document.getElementById(mapContainerId);
+
+            if (!container) return;
+
+            // Beri jeda 300ms agar animasi modal benar-benar selesai terbuka
+            // Ini adalah kunci agar ukuran (width/height) container tidak 0
+            setTimeout(() => {
+
+                // Jika peta sudah pernah diload untuk laporan ini, cukup atur ulang ukurannya
+                if (activeMapInstances[reportId]) {
+                    activeMapInstances[reportId].invalidateSize();
+                    return;
+                }
+
+                // Inisialisasi Peta Baru
+                const map = L.map(mapContainerId, {
+                    scrollWheelZoom: false // Mencegah scroll mouse ikut membesarkan peta
+                }).setView([lat, lng], 16);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+
+                // Tambahkan Pin
+                L.marker([lat, lng]).addTo(map);
+
+                // Simpan ke variabel global untuk mencegah error double initialization
+                activeMapInstances[reportId] = map;
+
+                // Perintah wajib Leaflet untuk menyesuaikan peta dengan modal yang baru muncul
+                map.invalidateSize();
+
+            }, 300); // 300ms delay
+        }
+    </script>
 </x-layouts::app>
