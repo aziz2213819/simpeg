@@ -15,30 +15,33 @@
 
         <flux:sidebar.nav>
             <flux:sidebar.group :heading="__('Navigasi')" class="grid">
-                <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                    wire:navigate>
-                    {{ __('Dashboard') }}
-                </flux:sidebar.item>
-                <flux:sidebar.item icon="briefcase" :href="route('jabatan.index')"
-                    :current="request()->routeIs('jabatan.index')" wire:navigate>
-                    {{ __('Jabatan') }}
-                </flux:sidebar.item>
-                <flux:sidebar.item icon="rectangle-stack" :href="route('pangkat.index')"
-                    :current="request()->routeIs('pangkat.index')" wire:navigate>
-                    {{ __('Pangkat/Gol') }}
-                </flux:sidebar.item>
-                <flux:sidebar.item icon="users" :href="route('pegawai.index')"
-                    :current="request()->routeIs('pegawai.index')" wire:navigate>
-                    {{ __('Pegawai') }}
-                </flux:sidebar.item>
-                <flux:sidebar.item icon="bell" :href="route('notifikasi.index')"
-                    :current="request()->routeIs('notifikasi.index')" wire:navigate>
-                    {{ __('Notifikasi') }}
-                </flux:sidebar.item>
-                <flux:sidebar.item icon="inbox-arrow-down" :href="route('admin.pengaduan.index')"
-                    :current="request()->routeIs('admin.pengaduan.index')" wire:navigate>
-                    {{ __('Pengaduan') }}
-                </flux:sidebar.item>
+                @if (auth()->user()->role == 'admin_simpeg')
+                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                        wire:navigate>
+                        {{ __('Dashboard') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="briefcase" :href="route('jabatan.index')"
+                        :current="request()->routeIs('jabatan.index')" wire:navigate>
+                        {{ __('Jabatan') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="rectangle-stack" :href="route('pangkat.index')"
+                        :current="request()->routeIs('pangkat.index')" wire:navigate>
+                        {{ __('Pangkat/Gol') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="users" :href="route('pegawai.index')"
+                        :current="request()->routeIs('pegawai.index')" wire:navigate>
+                        {{ __('Pegawai') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="bell" :href="route('notifikasi.index')"
+                        :current="request()->routeIs('notifikasi.index')" wire:navigate>
+                        {{ __('Notifikasi') }}
+                    </flux:sidebar.item>
+                @elseif (auth()->user()->role == 'admin_sampah')
+                    <flux:sidebar.item icon="inbox-arrow-down" :href="route('admin.pengaduan.index')"
+                        :current="request()->routeIs('admin.pengaduan.index')" wire:navigate>
+                        {{ __('Pengaduan') }}
+                    </flux:sidebar.item>
+                @endif
             </flux:sidebar.group>
         </flux:sidebar.nav>
 

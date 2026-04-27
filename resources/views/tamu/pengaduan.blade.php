@@ -41,6 +41,11 @@
                         2. Detail Laporan
                     </legend>
                     <div class="space-y-6">
+                        <flux:select id="tipe_pegawai" name="tipe_sampah" label="Tipe Pegawai" required>
+                            <option value="">Pilih Tipe Sampah...</option>
+                            <option value="organik" {{ old('tipe_sampah') == 'organik' ? 'selected' : '' }}>Organik</option>
+                            <option value="non_organik" {{ old('tipe_sampah') == 'non_organik' ? 'selected' : '' }}>Non Organik</option>
+                        </flux:select>
                         <flux:textarea name="deskripsi" label="Deskripsi Kondisi" rows="4"
                             placeholder="Contoh: Terdapat tumpukan sampah rumah tangga yang menyumbat selokan di depan minimarket, baunya sangat menyengat..."
                             required></flux:textarea>
@@ -120,7 +125,7 @@
                         Kembali</flux:button>
 
                     <flux:button type="submit" variant="primary"
-                        class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white">
+                        class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer">
                         Kirim Laporan Sekarang
                     </flux:button>
                 </div>

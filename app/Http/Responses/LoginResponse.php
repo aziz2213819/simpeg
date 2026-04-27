@@ -13,6 +13,10 @@ class LoginResponse implements LoginResponseContract
             return redirect()->route('dashboard');
         }
 
+        // if ($user->role == 'admin_simpeg') {
+        //     return redirect()->route('dashboard');
+        // }
+
         return redirect()->route('pegawai.homepage');
     }
 }

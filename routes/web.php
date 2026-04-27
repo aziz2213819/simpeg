@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'welcome')->name('home');
 Route::get('/pengaduan', [TamuController::class, 'create'])->name('pengaduan.create');
 Route::post('/pengaduan', [TamuController::class, 'store'])->name('pengaduan.store')->middleware('throttle:pengaduan_sampah');
+Route::get('/alur-lapor', [TamuController::class, 'alurLapor'])->name('alur-lapor');
 // Route::get('/masuk', [TamuController::class, 'masukForm'])->name('tamu.masukForm');
 // Route::post('/masuk', [TamuController::class, 'masuk'])->name('tamu.masuk');
 
@@ -21,19 +22,27 @@ Route::post('/pengaduan', [TamuController::class, 'store'])->name('pengaduan.sto
 // });
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    // admin
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+});
+
+Route::middleware(['auth', 'admin', 'isAdminSimpeg'])->group(function () {
     Route::prefix("admin")->group(function () {
         Route::get('/pangkat', RankGradeLive::class)->name('pangkat.index');
         Route::get('/jabatan', PositionLive::class)->name('jabatan.index');
         Route::resource('pegawai', EmployeeController::class);
         Route::resource('notifikasi', NotificationController::class);
+    });
+    Route::get('/pegawai/export', [EmployeeController::class, 'export'])->name('pegawai.export');
+});
+
+Route::middleware(['auth', 'admin', 'isAdminSampah'])->group(function () {
+    Route::prefix("admin")->group(function () {
         Route::get('/pengaduan', [ReportController::class, 'index'])->name('admin.pengaduan.index');
         Route::patch('/pengaduan/{pengaduan}/status', [ReportController::class, 'updateStatus'])->name('admin.pengaduan.status');
     });
 });
     
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', ])->group(function () {
     Route::get('/homepage', [PegawaiController::class, 'index'])->name('pegawai.homepage');
     Route::get('/profil', [PegawaiController::class, 'profile'])->name('pegawai.profil');
     Route::get('/password', [PegawaiController::class, 'password'])->name('pegawai.password');

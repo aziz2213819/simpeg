@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama_pelapor');
             $table->string('kontak')->nullable();
             $table->text('deskripsi')->nullable();
+            $table->enum('tipe_sampah', ['organik', 'non_organik'])->default('organik');
             $table->text('lokasi_manual')->nullable();
             $table->string('foto_bukti');
             // Menggunakan decimal untuk akurasi koordinat peta yang presisi

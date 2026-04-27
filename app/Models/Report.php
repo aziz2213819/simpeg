@@ -10,6 +10,7 @@ class Report extends Model
         'nama_pelapor',
         'kontak',
         'deskripsi',
+        'tipe_sampah',
         'lokasi_manual',
         'foto_bukti',
         'latitude',

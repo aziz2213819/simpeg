@@ -21,8 +21,17 @@
                     class="flex flex-col sm:flex-row w-full md:w-auto gap-2">
                     {{-- Filter Status --}}
                     <div class="w-full sm:w-40">
+                        <flux:select name="tipe_sampah" onchange="this.form.submit()">
+                            <option value="">Jenis Sampah</option>
+                            <option value="organik" {{ request('tipe_sampah') == 'organik' ? 'selected' : '' }}>Organik
+                            </option>
+                            <option value="non_organik" {{ request('tipe_sampah') == 'non_organik' ? 'selected' : '' }}>
+                                Non Organik</option>
+                        </flux:select>
+                    </div>
+                    <div class="w-full sm:w-40">
                         <flux:select name="status" onchange="this.form.submit()">
-                            <option value="">Semua Status</option>
+                            <option value="">Status Laporan</option>
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
                             </option>
                             <option value="proses" {{ request('status') == 'proses' ? 'selected' : '' }}>Diproses</option>
@@ -46,6 +55,7 @@
                     <flux:table.column>Tanggal</flux:table.column>
                     <flux:table.column>Pelapor</flux:table.column>
                     <flux:table.column>Lokasi & Koordinat</flux:table.column>
+                    <flux:table.column>Jenis Sampah</flux:table.column>
                     <flux:table.column>Foto</flux:table.column>
                     <flux:table.column>Status</flux:table.column>
                     <flux:table.column>Aksi</flux:table.column>
@@ -78,6 +88,10 @@
                                         <flux:icon.map-pin class="w-3 h-3" /> Buka di Maps
                                     </a>
                                 @endif
+                            </flux:table.cell>
+
+                            <flux:table.cell>
+                                {{ Str::headline($report->tipe_sampah) }}
                             </flux:table.cell>
 
                             {{-- Foto --}}

@@ -10,6 +10,68 @@
                 <flux:heading size="lg">Data Pegawai</flux:heading>
 
                 <div class="flex w-full sm:w-auto items-center gap-2">
+                    <flux:modal.trigger name="export-modal">
+                        <flux:button variant="primary">
+                            Export Excel
+                        </flux:button>
+                    </flux:modal.trigger>
+                    <flux:modal name="export-modal" class="min-w-96">
+                        <form action="{{ route('pegawai.export') }}" method="GET">
+
+                            <div class="space-y-6">
+
+                                <div>
+                                    <flux:heading size="lg">Export Data Pegawai</flux:heading>
+                                    <flux:subheading>
+                                        Pilih filter untuk rekap data pegawai
+                                    </flux:subheading>
+                                </div>
+
+                                {{-- Filter Golongan --}}
+                                <flux:select name="rank_grade_id" label="Golongan">
+                                    <option value="">Semua</option>
+                                    @foreach($rankGrades as $rankGrade)
+                                        <option value="{{ $rankGrade->id }}">
+                                            {{ $rankGrade->grade_code }}
+                                        </option>
+                                    @endforeach
+                                </flux:select>
+
+                                {{-- Filter Pendidikan --}}
+                                <flux:select name="education_level" label="Pendidikan">
+                                    <option value="">Semua</option>
+                                    <option value="SD">SD</option>
+                                    <option value="SMP">SMP</option>
+                                    <option value="SMA">SMA</option>
+                                    <option value="D1">D1</option>
+                                    <option value="D2">D2</option>
+                                    <option value="D3">D3</option>
+                                    <option value="D4">D4</option>
+                                    <option value="S1">S1</option>
+                                    <option value="S2">S2</option>
+                                    <option value="S3">S3</option>
+                                </flux:select>
+
+                                {{-- Filter Gender --}}
+                                <flux:select name="gender" label="Gender">
+                                    <option value="">Semua</option>
+                                    <option value="l">Laki-laki</option>
+                                    <option value="p">Perempuan</option>
+                                </flux:select>
+
+                                <div class="flex justify-end gap-2">
+                                    <flux:modal.close>
+                                        <flux:button variant="ghost">Batal</flux:button>
+                                    </flux:modal.close>
+
+                                    <flux:button type="submit" variant="primary">
+                                        Export
+                                    </flux:button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </flux:modal>
 
                     {{-- Form Pencarian & Filter --}}
                     <form action="{{ route('pegawai.index') }}" method="GET"
@@ -24,7 +86,7 @@
                                         @if ($rankGrade->rank_name === null)
                                             {{ $rankGrade->grade_code }}
                                         @else
-                                            {{ $rankGrade->rank_name . " - " . "(" .  $rankGrade->grade_code . ")" }}
+                                            {{ $rankGrade->rank_name . " - " . "(" . $rankGrade->grade_code . ")" }}
                                         @endif
                                     </option>
                                 @endforeach

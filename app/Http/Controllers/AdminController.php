@@ -11,6 +11,7 @@ class AdminController extends Controller
     {
         // 1. Hitung jumlah laporan pending
         $pendingReportsCount = Report::where('status', 'pending')->count();
+        $allReport = Report::count();
 
         // 2. Hitung jumlah pegawai (Pisahkan ASN dan Non ASN)
         $asnCount = Employee::where('type', 'ASN')->count();
@@ -26,7 +27,8 @@ class AdminController extends Controller
             'pendingReportsCount', 
             'asnCount', 
             'nonAsnCount', 
-            'recentReports'
+            'recentReports',
+            'allReport'
         ));
     }
 }

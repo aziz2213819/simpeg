@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('type', ['pangkat', 'gaji_berkala', 'pensiun']);
             $table->string('title');
             $table->text('message');
+            $table->enum('status', ['pending','approved','rejected'])->nullable();
             $table->string('sk_file_path')->nullable();
             $table->timestamp('submitted_at')->nullable();
             $table->boolean('is_read')->default(false);

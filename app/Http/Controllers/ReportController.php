@@ -11,6 +11,7 @@ class ReportController extends Controller
     {
         $search = $request->input('search');
         $status = $request->input('status');
+        $type = $request->input('tipe_sampah');
 
         $reports = Report::query()
             ->when($search, function ($query, $search) {
@@ -23,11 +24,14 @@ class ReportController extends Controller
             ->when($status, function ($query, $status) {
                 return $query->where('status', $status);
             })
-            ->latest() // Urutkan dari laporan terbaru
+            ->when($type, function ($query, $type) {
+                return $query->where('tipe_sampah', $type);
+            })
+            ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.pengaduan.index', compact('reports', 'search', 'status'));
+        return view('admin.pengaduan.index', compact('reports', 'search', 'status', 'type'));
     }
 
     public function show(Report $pengaduan)

@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Models\Employee;
+use App\Models\Notification;
 use Carbon\Carbon;
 
 class PromotionService
@@ -12,20 +13,28 @@ class PromotionService
     {
         $employees = Employee::get();
         foreach ($employees as $employee) {
+            if ($employee->nip == "197002052003121004") {
+                continue;
+            }
             if (!$this->isEligibleByTime($employee)) {
                 continue;
             }
-            
-            
+            // dd($this->isEligibleByTime($employee));
             $nextRank = $this->getNextRank($employee->rank_grade_id);
             if (!$nextRank) {
                 continue;
             }
-                
-            dd($this->requiresSK($employee, $employee->rank_grade_id, $nextRank));
+            // dd($this->requiresSK($employee, $employee->rank_grade_id, $nextRank));
             // 🚫 butuh SK → skip
             if ($this->requiresSK($employee, $employee->rank_grade_id, $nextRank)) {
-                continue;
+                $approved = Notification::where('employee_id', $employee->id)
+                    ->where('type', 'pangkat')
+                    ->latest()
+                    ->value('status') === 'approved';
+
+                if (!$approved) {
+                    continue;
+                }
             }
 
             // ✅ auto promote
@@ -84,6 +93,15 @@ class PromotionService
         };
 
         return !in_array($level, $minRequirement);
+    }
+
+    public function needsSK($employee)
+    {
+        $nextRank = $this->getNextRank($employee->rank_grade_id);
+
+        if (!$nextRank) return false;
+
+        return $this->requiresSK($employee, $employee->rank_grade_id, $nextRank);
     }
 
     private function promote($employee, $nextRankId)

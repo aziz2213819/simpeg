@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EmployeesExport;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\RankGrade;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
@@ -231,5 +233,11 @@ class EmployeeController extends Controller
 
         return redirect()->route('pegawai.index')
                          ->with('success', 'Data pegawai berhasil dihapus.');
+    }
+
+    public function export(Request $request) {
+        return Excel::download(
+            new EmployeesExport($request->only(['search','rank_grade_id'])), 'pegawai.xlsx'
+        );
     }
 }

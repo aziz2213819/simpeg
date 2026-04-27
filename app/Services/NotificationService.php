@@ -8,6 +8,14 @@ use Illuminate\Support\Str;
 
 class NotificationService
 {
+
+    protected PromotionService $promotionService;
+
+    public function __construct(PromotionService $promotionService)
+    {
+        $this->promotionService = $promotionService;
+    }
+
     // Pemetaan jadwal spesifik untuk masing-masing tipe notifikasi
     protected array $typeSchedules = [
         'pangkat' => [
@@ -75,7 +83,7 @@ class NotificationService
                                 // str_contains adalah bawaan PHP 8, berfungsi seperti LIKE '%keyword%' di SQL
                                 if (str_contains($existingTitle, $searchKeyword)) {
                                     $alreadyNotified = true;
-                                    break; 
+                                    break;
                                 }
                             }
                         }
@@ -91,13 +99,18 @@ class NotificationService
 
                             // 5. Buat Notifikasi Baru
                             $newTitle = 'Peringatan H-' . $schedule['label'] . ' ' . Str::headline($type);
-                            
+
+                            $needsSK = $this->promotionService->needsSK($employee);
+                            $status = null;
+                            if ($type === 'pangkat' && $needsSK) {
+                                $status = 'pending';
+                            }
                             Notification::create([
                                 'employee_id' => $employee->id,
                                 'type'        => $type,
                                 'title'       => $newTitle,
                                 'message'     => "Sistem mendeteksi jadwal " . Str::headline($type) . " untuk {$employee->name} jatuh pada " . $targetDate->format('d M Y') . ". Mohon segera persiapkan berkas yang dibutuhkan.",
-                                'is_read'     => false,
+                                'status'      => $status,
                             ]);
 
                             // 6. PENTING: Masukkan notifikasi yang baru dibuat ini ke dalam array cache

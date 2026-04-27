@@ -16,7 +16,16 @@ class UserSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
+            'name' => 'Admin Simpeg',
             'email' => 'tsukiaka313@gmail.com',
+            'role' => 'admin_simpeg',
+            'password' => Hash::make('admin123'),
+        ]);
+
+        User::factory()->create([
+            'name' => 'Admin DLH',
+            'email' => 'admindlh@gmail.com',
+            'role' => 'admin_sampah',
             'password' => Hash::make('admin123'),
         ]);
     }

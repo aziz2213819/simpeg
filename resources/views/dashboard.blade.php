@@ -4,14 +4,19 @@
         {{-- Header Ringkas --}}
         <div>
             <flux:heading size="xl">Dashboard Admin</flux:heading>
-            <flux:subheading>Ringkasan sistem kepegawaian dan laporan masyarakat hari ini.</flux:subheading>
+            @if (auth()->user()->role == "admin_simpeg")
+                <flux:subheading>Ringkasan sistem kepegawaian hari ini.</flux:subheading>
+            @elseif (auth()->user()->role == "admin_sampah")
+                <flux:subheading>Ringkasan sistem laporan masyarakat hari ini.</flux:subheading>
+            @endif
         </div>
 
+        {{-- @if (auth()->user()->role == "admin_simpeg") --}}
         {{-- TOP SECTION: 3 Stat Cards --}}
         <div class="grid gap-4 md:grid-cols-3">
 
             {{-- Card 1: Laporan Pending --}}
-            <flux:card class="flex items-center gap-4 !p-6 border-l-4 border-l-red-500">
+            <flux:card class="flex items-center gap-4 p-6! border-l-4 border-l-red-500">
                 <div class="bg-red-100 text-red-600 p-3 rounded-full dark:bg-red-900/30 dark:text-red-400">
                     <flux:icon.bell-alert class="w-8 h-8" />
                 </div>
@@ -23,20 +28,20 @@
             </flux:card>
 
             {{-- Card 2: Pegawai ASN --}}
-            <flux:card class="flex items-center gap-4 !p-6 border-l-4 border-l-emerald-500">
+            <flux:card class="flex items-center gap-4 p-6! border-l-4 border-l-emerald-500">
                 <div
                     class="bg-emerald-100 text-emerald-600 p-3 rounded-full dark:bg-emerald-900/30 dark:text-emerald-400">
                     <flux:icon.user-group class="w-8 h-8" />
                 </div>
                 <div>
-                    <flux:subheading>Pegawai ASN</flux:subheading>
-                    <flux:heading size="xl">{{ $asnCount }} <span
-                            class="text-sm font-normal text-zinc-500 dark:text-zinc-400">Orang</span></flux:heading>
+                    <flux:subheading>Jumlah Laporan</flux:subheading>
+                    <flux:heading size="xl">{{ $allReport }} <span
+                            class="text-sm font-normal text-zinc-500 dark:text-zinc-400">Jumlah</span></flux:heading>
                 </div>
             </flux:card>
 
             {{-- Card 3: Pegawai Non ASN --}}
-            <flux:card class="flex items-center gap-4 !p-6 border-l-4 border-l-blue-500">
+            <flux:card class="flex items-center gap-4 p-6! border-l-4 border-l-blue-500">
                 <div class="bg-blue-100 text-blue-600 p-3 rounded-full dark:bg-blue-900/30 dark:text-blue-400">
                     <flux:icon.users class="w-8 h-8" />
                 </div>
@@ -48,6 +53,8 @@
             </flux:card>
 
         </div>
+        {{-- @elseif () --}}
+        {{-- @endif --}}
 
         {{-- BOTTOM SECTION: Tabel Laporan Terbaru --}}
         <flux:card class="relative flex-1 flex flex-col">
