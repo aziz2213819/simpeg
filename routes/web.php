@@ -33,6 +33,8 @@ Route::middleware(['auth', 'admin', 'isAdminSimpeg'])->group(function () {
         Route::resource('notifikasi', NotificationController::class);
     });
     Route::get('/pegawai/export', [EmployeeController::class, 'export'])->name('pegawai.export');
+    Route::get('/pegawai/pdf-kgb', [EmployeeController::class, 'exportPdfKgb'])->name('pegawai.kgb.pdf');
+    Route::get('/pegawai/pdf-pensiun', [EmployeeController::class, 'exportPdfPensiun'])->name('pegawai.pensiun.pdf');
 });
 
 Route::middleware(['auth', 'admin', 'isAdminSampah'])->group(function () {

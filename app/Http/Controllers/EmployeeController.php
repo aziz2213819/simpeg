@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -254,5 +256,54 @@ class EmployeeController extends Controller
         return Excel::download(
             new EmployeesExport($filters), 'pegawai.xlsx'
         );
+    }
+
+    public function exportPdfKgb()
+    {
+        // 🔴 tanggal sekarang (bisa di-hardcode untuk testing)
+        $now = now();
+        // $now = Carbon::parse('2026-04-01'); // untuk test
+
+        $target = $now->copy()->addMonths(2);
+
+        $employees = Employee::with(['rankGrade', 'position'])
+            ->whereNotNull('tmt_kgb')
+            ->whereMonth('tmt_kgb', $target->month)
+            ->whereYear('tmt_kgb', $target->year)
+            ->get();
+
+        $periode = strtoupper($target->translatedFormat('F Y'));
+        $title = "DAFTAR KENAIKAN GAJI BERKALA (KGB) PERIODE {$periode}";
+
+        $pdf = Pdf::loadView('admin.pdf.pegawai', compact('employees', 'periode', 'title'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('pegawai.kgb.pdf');
+    }
+
+    public function exportPdfPensiun() {
+        $now = now();
+        $end = $now->copy()->addMonths(8);
+
+        $employees = Employee::with(['rankGrade', 'position'])
+            ->whereNotNull('birth_date')
+            ->get()
+            ->filter(function ($e) use ($now, $end) {
+                $pensiun = Carbon::parse($e->birth_date)->addYears(60);
+
+                return $pensiun->between($now, $end);
+            })
+            ->sortBy(function ($e) {
+                return Carbon::parse($e->birth_date)->addYears(60);
+            })
+            ->values();
+        
+        // $periode = strtoupper($end->translatedFormat('F Y'));
+        $title = "DAFTAR PEGAWAI MEMASUKI MASA PENSIUN";
+        
+        $pdf = Pdf::loadView('admin.pdf.pegawai', compact('employees', 'title'))
+            ->setPaper('a4', 'portrait');
+        
+        return $pdf->stream('pegawai.kgb.pdf');
     }
 }
