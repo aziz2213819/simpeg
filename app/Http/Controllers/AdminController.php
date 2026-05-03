@@ -5,11 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Notification;
 use App\Models\Report;
+use App\Models\User;
+use App\Services\KgbService;
+use App\Services\NotificationService;
+use App\Services\PensiunService;
+use App\Services\PromotionService;
 use Illuminate\Support\Facades\Auth;
 class AdminController extends Controller
 {
-    public function index()
+    public function index(NotificationService $notificationService, PromotionService $promotionService, KgbService $kgbService, PensiunService $pensiunService)
     {
+        $users = User::has('employee')->with('employee')->get();
+        $notificationService->checkAndGenerateNotifications($users);
+        $promotionService->process();
+        $kgbService->process();
+        $pensiunService->process();
         $user = Auth::user();
         // dd($user->role);
 

@@ -27,7 +27,7 @@ class RateLimitServiceProvider extends ServiceProvider
             
             // Batasi 3 kali pengiriman form per 1 Jam berdasarkan IP Address.
             // Jika Anda ingin per menit, ganti menjadi Limit::perMinute(3)
-            return Limit::perHour(30)->by($request->ip())->response(function (Request $request, array $headers) {
+            return Limit::perHour(3)->by($request->ip())->response(function (Request $request, array $headers) {
                 
                 // Pesan kustom jika user terkena limit (Mencegah error 429 bawaan yang kaku)
                 // return response()->view('errors.429', [

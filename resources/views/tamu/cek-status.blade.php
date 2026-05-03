@@ -1,17 +1,12 @@
 <x-layouts::app.landing :title="__('Portal Laporan - DLH Bangkalan')">
+    <x-navbar />
     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto font-sans">
 
         {{-- Header Portal --}}
         <div class="text-center mb-12">
-            <div class="flex flex-col items-center justify-center">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo DLH" class="h-20 w-auto object-contain mb-4">
-                <h1 class="text-lg font-black tracking-widest text-zinc-900 dark:text-white uppercase">
-                    Dinas Lingkungan Hidup
-                </h1>
-                <div class="h-1 w-12 bg-emerald-500 mt-2 rounded-full"></div>
-            </div>
+            <x-heading-dlh />
             <h1 class="text-3xl font-bold text-zinc-900 dark:text-white mt-4">Portal Transparansi Laporan</h1>
-            <p class="mt-3 text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto text-sm italic">
+            <p class="mt-3 text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto text-base italic">
                 "Daftar aspirasi dan laporan kebersihan masyarakat wilayah Bangkalan yang sedang diproses petugas."
             </p>
         </div>
@@ -22,23 +17,24 @@
             <div class="lg:col-span-2 space-y-6">
                 
                 <div class="flex justify-between items-center mb-2 px-1">
-                    <h3 class="font-bold text-zinc-800 dark:text-white flex items-center gap-2 uppercase text-xs tracking-widest">
+                    <h3 class="font-bold text-zinc-800 dark:text-white flex items-center gap-2 uppercase text-sm tracking-widest">
                         <flux:icon.chat-bubble-left-right class="w-5 h-5 text-emerald-500" /> Laporan Terbaru
                     </h3>
-                    <flux:button href="{{ route('pengaduan.create') }}" size="sm" variant="primary" class="bg-amber-500 hover:bg-amber-600 border-none font-bold text-[10px] shadow-sm" wire:navigate>
+                    <flux:button href="{{ route('pengaduan.create') }}" size="sm" variant="primary" class="bg-amber-500 hover:bg-amber-600 border-none font-bold text-xs shadow-sm" wire:navigate>
                         + BUAT PENGADUAN
                     </flux:button>
                 </div>
 
                 @forelse($allReports as $item)
+                <div onclick="window.location.href='{{ route('admin.pengaduan.show', $item->id) }}'" class="cursor-pointer">
                     <flux:card class="p-0 overflow-hidden border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow">
                         
                         {{-- Meta Info --}}
-                        <div class="bg-zinc-100/80 dark:bg-zinc-900/50 border-b border-zinc-200 dark:border-zinc-800 px-5 py-2.5 flex justify-between items-center text-[10px]">
+                        <div class="bg-zinc-100/80 dark:bg-zinc-900/50 border-b border-zinc-200 dark:border-zinc-800 px-5 py-2.5 flex justify-between items-center text-xs">
                             <span class="font-black text-emerald-700 dark:text-emerald-500 flex items-center gap-1.5 uppercase tracking-[0.15em]">
                                 <flux:icon.megaphone class="w-3.5 h-3.5"/> Pengaduan
                             </span>
-                            <span class="text-zinc-500 font-medium flex items-center gap-1">
+                            <span class="text-zinc-500 dark:text-white font-medium flex items-center gap-1">
                                 <flux:icon.clock class="w-3.5 h-3.5"/> {{ $item->created_at->diffForHumans() }}
                             </span>
                         </div>
@@ -50,16 +46,16 @@
                                     {{ substr($item->nama_pelapor ?? 'N', 0, 1) }}
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-sm text-zinc-900 dark:text-white">
+                                    <h4 class="text-base font-bold text-zinc-900 dark:text-white">
                                         {{ Str::mask($item->nama_pelapor ?? 'Masyarakat', '*', 2) }}
                                     </h4>
-                                    <p class="text-[10px] text-zinc-400 uppercase font-bold tracking-tighter">Warga Bangkalan</p>
+                                    <p class="text-sm text-zinc-400 uppercase font-bold tracking-tighter">Warga Bangkalan</p>
                                 </div>
                             </div>
                             
                             {{-- Deskripsi --}}
                             <div class="mb-5 px-1">
-                                <p class="text-zinc-700 dark:text-zinc-300 text-sm leading-relaxed italic">
+                                <p class="text-zinc-700 dark:text-zinc-300 text-base leading-relaxed italic">
                                     "{{ $item->deskripsi }}"
                                 </p>
                             </div>
@@ -84,7 +80,7 @@
                                             </a>
                                         @else
                                             <div class="flex flex-col items-center justify-center text-center p-2">
-                                                <img src="{{ asset('images/placeholder.png') }}" class="w-10 h-10 opacity-30 mb-1">
+                                                <img src="{{ asset('images/placeholder.png') }}" class="w-10 h-10 opacity-30 mb-1" />
                                                 <span class="text-zinc-400 text-[8px] font-black uppercase tracking-tighter">GAMBAR TIDAK ADA</span>
                                             </div>
                                         @endif
@@ -93,10 +89,10 @@
                                 
                                 {{-- Detail Spesifik --}}
                                 <div class="flex-1 space-y-2 py-1">
-                                    <span class="inline-block px-2 py-0.5 bg-blue-600 text-white text-[9px] font-black rounded uppercase tracking-wider mb-1">
+                                    <span class="inline-block px-2 py-1 bg-blue-600 text-white text-xs font-black rounded uppercase tracking-wider mb-1">
                                         Informasi Detail
                                     </span>
-                                    <div class="text-[11px] space-y-2 text-zinc-600 dark:text-zinc-400 font-medium">
+                                    <div class="text-sm space-y-2 text-zinc-600 dark:text-zinc-400 font-medium">
                                         <div class="flex items-center gap-2">
                                             <flux:icon.tag class="w-3.5 h-3.5 text-zinc-400"/>
                                             <span>Jenis: <span class="text-zinc-900 dark:text-white font-bold">{{ Str::headline($item->tipe_sampah) }}</span></span>
@@ -130,14 +126,14 @@
 
                                 <div class="flex items-center gap-1.5">
                                     {{-- Status Badge --}}
-                                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter shadow-sm
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-tighter shadow-sm
                                         {{ $item->status === 'selesai' ? 'bg-emerald-500 text-white' : ($item->status === 'proses' ? 'bg-blue-500 text-white' : 'bg-zinc-200 text-zinc-500 dark:bg-zinc-800') }}">
                                         {{ $item->status === 'selesai' ? 'Selesai' : ($item->status === 'proses' ? 'Diproses' : 'Menunggu') }}
                                     </span>
 
                                     {{-- Tombol Komentar --}}
                                     <a href="{{ route('admin.pengaduan.show', $item->id) }}#comments" class="no-underline" wire:navigate>
-                                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter bg-orange-500 text-white shadow-sm hover:bg-orange-600 transition-colors cursor-pointer flex items-center gap-2">
+                                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-tighter bg-orange-500 text-white shadow-sm hover:bg-orange-600 transition-colors cursor-pointer flex items-center gap-2">
                                             <span class="bg-white/20 px-1 py-0.5 rounded text-[9px]">
                                                 {{ $item->comments_count ?? 0 }}
                                             </span>
@@ -148,6 +144,7 @@
                             </div>
                         </div>
                     </flux:card>
+                </div>
                 @empty
                     <div class="text-center py-20 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-3xl">
                         <flux:icon.inbox class="w-12 h-12 mx-auto text-zinc-300 mb-4" />
@@ -175,8 +172,8 @@
                             @if(!$loop->last)
                                 <div class="absolute left-3 top-6 w-0.5 h-10 bg-zinc-100 dark:bg-zinc-800"></div>
                             @endif
-                            <div class="flex-none w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-black z-10 shadow-sm">{{ $index + 1 }}</div>
-                            <div class="text-[10px]">
+                            <div class="flex-none w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-black z-10 shadow-sm">{{ $index + 1 }}</div>
+                            <div class="text-xs">
                                 <span class="font-bold text-zinc-900 dark:text-white block uppercase mb-0.5">{{ $step[0] }}</span>
                                 <p class="text-zinc-500 dark:text-zinc-400 leading-relaxed">{{ $step[1] }}</p>
                             </div>
@@ -187,11 +184,11 @@
             </div>
         </div>
     </div>
+    <x-footer />
 
     <script>
         function copyShareLink(path) {
-            const fullUrl = window.location.origin + path;
-            navigator.clipboard.writeText(fullUrl).then(() => {
+            navigator.clipboard.writeText(path).then(() => {
                 alert('Link laporan berhasil disalin!');
             }).catch(err => {
                 alert('Gagal menyalin link.');

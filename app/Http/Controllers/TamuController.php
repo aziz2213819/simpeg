@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Models\User;
 use App\Services\KgbService;
 use App\Services\NotificationService;
+use App\Services\PensiunService;
 use App\Services\PromotionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -24,18 +25,22 @@ class TamuController extends Controller
         return view('pages.auth.register');
     }
 
-    public function create(NotificationService $notificationService, PromotionService $promotionService, KgbService $kgbService)
+    public function create(NotificationService $notificationService, PromotionService $promotionService, KgbService $kgbService, PensiunService $pensiunService)
     {
         $users = User::has('employee')->with('employee')->get();
         $notificationService->checkAndGenerateNotifications($users);
         $promotionService->process();
         $kgbService->process();
+        $pensiunService->process();
         
         return view('tamu.pengaduan');
     }
 
     public function store(Request $request)
     {
+        if ($request->filled('website')) {
+            abort(403, 'Spam detected');
+        }
         // 1. Pengaturan Validasi
         $rules = [
             'nama_pelapor'  => 'required|string|max:255',
@@ -107,9 +112,9 @@ class TamuController extends Controller
         // Jika user mencari ID tertentu, filter datanya dan tetap hitung komentar.
         if ($request->filled('tracking_id')) {
             $allReports = Report::withCount('comments')
-                                ->where('tracking_id', 'LIKE', '%' . $request->tracking_id . '%')
-                                ->latest()
-                                ->get();
+                ->where('tracking_id', 'LIKE', '%' . $request->tracking_id . '%')
+                ->latest()
+                ->get();
         }
 
         return view('tamu.cek-status', compact('allReports'));

@@ -10,7 +10,7 @@
             
             @if (session('success'))
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition
-                    class="fixed top-6 right-6 z-[100] flex items-center gap-3 px-5 py-3 bg-white dark:bg-zinc-900 border border-emerald-200 dark:border-emerald-800 shadow-xl rounded-2xl">
+                    class="fixed top-6 right-6 z-100 flex items-center gap-3 px-5 py-3 bg-white dark:bg-zinc-900 border border-emerald-200 dark:border-emerald-800 shadow-xl rounded-2xl">
                     <div class="p-1.5 bg-emerald-500 rounded-full text-white">
                         <flux:icon.check class="w-4 h-4" />
                     </div>
@@ -23,20 +23,20 @@
             {{-- Filter Bar --}}
             <div class="p-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
                 <form action="{{ route('admin.pengaduan.index') }}" method="GET" class="flex flex-wrap items-center gap-3">
-                    <div class="flex-1 min-w-[300px]">
+                    <div class="flex-1 min-w-75">
                         <flux:input name="search" icon="magnifying-glass" value="{{ request('search') }}" 
                             placeholder="Cari berdasarkan nama pelapor atau lokasi..." 
                             class="bg-white dark:bg-zinc-950 border-zinc-200" />
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <flux:select name="tipe_sampah" onchange="this.form.submit()" class="min-w-[140px]">
+                        <flux:select name="tipe_sampah" onchange="this.form.submit()" class="min-w-35">
                             <option value="">Semua Jenis</option>
                             <option value="organik" {{ request('tipe_sampah') == 'organik' ? 'selected' : '' }}>Organik</option>
                             <option value="non_organik" {{ request('tipe_sampah') == 'non_organik' ? 'selected' : '' }}>Non Organik</option>
                         </flux:select>
 
-                        <flux:select name="status" onchange="this.form.submit()" class="min-w-[140px]">
+                        <flux:select name="status" onchange="this.form.submit()" class="min-w-35">
                             <option value="">Semua Status</option>
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="proses" {{ request('status') == 'proses' ? 'selected' : '' }}>Diproses</option>
@@ -54,7 +54,7 @@
                     <flux:table.column>Tipe</flux:table.column>
                     <flux:table.column>Status</flux:table.column>
                     <flux:table.column>Komentar</flux:table.column>
-                    <flux:table.column align="right" class="pr-6">Opsi</flux:table.column>
+                    <flux:table.column>Opsi</flux:table.column>
                 </flux:table.columns>
 
                 <flux:table.rows>
@@ -70,7 +70,7 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <div class="font-semibold text-zinc-900">#REP-{{ str_pad($report->id, 4, '0', STR_PAD_LEFT) }}</div>
+                                        <div class="font-semibold">#REP-{{ str_pad($report->id, 4, '0', STR_PAD_LEFT) }}</div>
                                         <div class="text-[10px] text-zinc-400 uppercase tracking-wide">{{ $report->created_at->translatedFormat('d M Y') }}</div>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
 
                             <flux:table.cell>
                                 <div class="text-sm font-medium">{{ $report->nama_pelapor }}</div>
-                                <div class="text-xs text-zinc-400 italic truncate max-w-[120px]">{{ $report->lokasi_manual }}</div>
+                                <div class="text-xs text-zinc-400 italic truncate max-w-30">{{ $report->lokasi_manual }}</div>
                             </flux:table.cell>
 
                             <flux:table.cell>
@@ -93,7 +93,7 @@
                                 </flux:badge>
                             </flux:table.cell>
                             <flux:table.cell>
-                                <div class="flex items-center gap-1.5 text-zinc-500">
+                                <div class="flex items-center gap-1.5">
                                     <flux:icon.chat-bubble-left-right class="w-4 h-4" />
                                     {{-- Menggunakan comments_count dari withCount() --}}
                                     <span class="text-xs font-bold">{{ $report->comments_count ?? 0 }}</span>
@@ -170,7 +170,7 @@
                                                 <div class="space-y-3">
                                                     @forelse($report->comments as $comment)
                                                         <div class="flex gap-3 {{ $comment->user_id == Auth::id() ? 'flex-row-reverse text-right' : '' }}">
-                                                            <div class="w-7 h-7 rounded-full bg-emerald-500 flex-shrink-0 flex items-center justify-center text-white font-bold text-[10px]">
+                                                            <div class="w-7 h-7 rounded-full bg-emerald-500 shrink-0 flex items-center justify-center text-white font-bold text-[10px]">
                                                                 {{ substr($comment->user->name ?? 'A', 0, 1) }}
                                                             </div>
                                                             <div class="max-w-[85%]">

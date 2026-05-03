@@ -8,7 +8,6 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TamuController;
 use App\Livewire\PositionLive;
 use App\Livewire\RankGradeLive;
-use App\Models\Report;
 use Illuminate\Support\Facades\Route;
 
 // --- AKSES PUBLIK (WARGA) ---
@@ -29,7 +28,7 @@ Route::get('/alur-lapor', [TamuController::class, 'alurLapor'])->name('alur-lapo
 Route::get('/cek-status', [TamuController::class, 'cekStatus'])->name('cek.status');
 
 // Detail Pengaduan dipindah ke LUAR agar warga bisa lihat progress lewat link/ID Tracking
-Route::get('/admin/pengaduan/{pengaduan}', [ReportController::class, 'show'])->name('admin.pengaduan.show');
+Route::get('/pengaduan/{pengaduan}', [ReportController::class, 'show'])->name('admin.pengaduan.show');
 
 
 // --- AKSES ADMIN (DASHBOARD UMUM) ---

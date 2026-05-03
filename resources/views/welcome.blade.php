@@ -14,44 +14,7 @@
     <div class="text-zinc-900 font-sans">
         <x-floating-managed-message />
 
-        {{-- NAVBAR --}}
-        <nav class="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-            <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo DLH" class="h-14 w-auto object-contain" />
-                    <span class="text-2xl font-bold tracking-tight dark:text-white">DLH <span class="text-emerald-600">Care</span></span>
-                </div>
-                <a href="{{ route('profil.dlh') }}" class="text-sm text-emerald-600 hover:text-emerald-500 transition-colors">Lihat Profil & Struktur Organisasi</a>
-            </div>
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="{{ route('home') }}" class="hover:text-emerald-600 transition-colors dark:text-white">Beranda</a>
-                <a href="{{ route('cek.status') }}#alur-lapor" class="hover:text-emerald-600 transition-colors dark:text-white">Cek laporan</a>
-                <a href="{{ route('profil.dlh') }}" class="hover:text-emerald-600 transition-colors dark:text-white" wire:navigate>Tentang DLH</a>
-
-                @auth
-                    <a href="{{ url(auth()->check() && auth()->user()->employee_id == null ? '/dashboard' : '/homepage') }}"
-                        class="block px-5 py-1.5 text-white border border-emerald-700 hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal bg-emerald-600 hover:bg-emerald-700"
-                        wire:navigate>
-                        Dashboard
-                    </a>
-                @else
-                    <div class="flex gap-4">
-                        <flux:button href="{{ route('login') }}"
-                            class="block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-emerald-600 hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal"
-                            wire:navigate>
-                            Log in Petugas
-                        </flux:button>
-
-                        @if (Route::has('pengaduan.create'))
-                            <flux:button href="{{ route('pengaduan.create') }}" variant="primary"
-                                class="block bg-emerald-600 hover:bg-emerald-700 dark:text-white" wire:navigate>
-                                Lapor Sebagai Warga
-                            </flux:button>
-                        @endif
-                    </div>
-                @endauth
-            </div>
-        </nav>
+        <x-navbar />
 
         {{-- HERO SECTION --}}
         <section class="relative overflow-hidden bg-emerald-50/50 dark:bg-transparent py-20 px-8">
@@ -145,41 +108,13 @@
             <div class="max-w-7xl mx-auto bg-emerald-600 rounded-3xl p-12 text-center text-white space-y-6">
                 <h2 class="text-4xl font-bold">Mari Wujudkan Lingkungan Bersih & Asri!</h2>
                 <p class="text-emerald-100 max-w-xl mx-auto">Satu laporan dari Anda sangat berarti untuk mencegah pencemaran dan menjaga keindahan kota kita. Jangan ragu untuk melapor.</p>
-                <flux:button href="{{ route('pengaduan.create') }}" variant="subtle" class="bg-white text-emerald-600 hover:bg-emerald-50 border-none px-10 font-bold" wire:navigate>
+                <flux:button href="{{ route('pengaduan.create') }}" variant="subtle" class="bg-white hover:bg-emerald-50 border-none px-10 font-bold" wire:navigate>
                     Lapor Sekarang
                 </flux:button>
             </div>
         </section>
 
-        {{-- FOOTER --}}
-        <footer id="footer" class="bg-zinc-950 text-zinc-400 py-16 px-8">
-            <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
-                <div class="col-span-2 space-y-6">
-                    <div class="flex items-center gap-2 text-white">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo DLH" class="h-14 w-auto object-contain" />
-                        <span class="text-2xl font-bold">DLH<span class="text-emerald-500">Care</span></span>
-                    </div>
-                    <p class="max-w-sm">Layanan pengaduan masyarakat resmi di bawah naungan Dinas Lingkungan Hidup, khusus untuk penanganan persampahan dan kebersihan fasilitas umum.</p>
-                </div>
-                <div class="space-y-4">
-                    <h4 class="text-white font-bold">Tautan Cepat</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="{{ route('pengaduan.create') }}" class="hover:text-emerald-500">Cara Melapor</a></li>
-                    </ul>
-                </div>
-                <div class="space-y-4">
-                    <h4 class="text-white font-bold">Kontak DLH</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li>pengaduan@dlh.bangkalankab.go.id</li>
-                        <li>(031) 1234-5678</li>
-                        <li class="leading-relaxed text-xs">Jl. Soekarno Hatta No.32b, Wr 08, Mlajah, Kec. Bangkalan, Kabupaten Bangkalan, Jawa Timur 69116</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="max-w-7xl mx-auto border-t border-zinc-800 mt-12 pt-8 text-center text-xs">
-                <p>&copy; 2026 Dinas Lingkungan Hidup Kabupaten Bangkalan. Hak Cipta Dilindungi.</p>
-            </div>
-        </footer>
+        <x-footer />
     </div>
 
     {{-- Script Leaflet & Inisialisasi --}}

@@ -1,14 +1,10 @@
 <x-layouts::app.landing :title="__('Form Pengaduan Sampah')">
+    <x-navbar />
     <div class="py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-sans">
 
         {{-- Header Page --}}
         <div class="text-center mb-6">
-            <div class="flex flex-col items-center justify-center text-center">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo DLH" class="h-32 w-auto object-contain mb-2">
-                <h1 class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-                    Dinas Lingkungan Hidup
-                </h1>
-            </div>
+            <x-heading-dlh />
             <h1 class="text-3xl font-bold text-zinc-900 dark:text-white">Form Laporan Kebersihan</h1>
             <p class="mt-3 text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
                 Bantu kami menjaga kebersihan lingkungan. Lengkapi form di bawah ini untuk melaporkan tumpukan sampah
@@ -22,6 +18,8 @@
             <form action="{{ route('pengaduan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-10"
                 onsubmit="return validateLokasi()">
                 @csrf
+
+                <input type="text" name="website" style="display:none">
 
                 {{-- SECTION 1: Informasi Pelapor --}}
                 <fieldset>
