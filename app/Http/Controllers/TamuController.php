@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Models\Struktural;
 use App\Models\User;
 use App\Services\KgbService;
 use App\Services\NotificationService;
@@ -118,5 +119,10 @@ class TamuController extends Controller
         }
 
         return view('tamu.cek-status', compact('allReports'));
+    }
+
+    public function profilDLH() {
+        $struktural = Struktural::where('is_active', true)->first();
+        return view('profil-dlh', compact('struktural'));
     }
 }

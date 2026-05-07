@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\StrukturalController;
 use App\Http\Controllers\TamuController;
 use App\Livewire\PositionLive;
 use App\Livewire\RankGradeLive;
@@ -17,11 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Route Tentang DLH (Isinya profil berbentuk teks)
-Route::get('/profil-dlh', function () {
-    return view('profil-dlh');
-})->name('profil.dlh');
-
+Route::get('/profil-dlh', [TamuController::class, 'profilDLH'])->name('profil.dlh');
 Route::get('/pengaduan', [TamuController::class, 'create'])->name('pengaduan.create'); // trigger service
 Route::post('/pengaduan', [TamuController::class, 'store'])->name('pengaduan.store')->middleware('throttle:pengaduan_sampah');
 Route::get('/alur-lapor', [TamuController::class, 'alurLapor'])->name('alur-lapor');
@@ -45,7 +42,10 @@ Route::middleware(['auth', 'admin', 'isAdminSimpeg'])->group(function () {
         Route::resource('pegawai', EmployeeController::class);
         Route::resource('notifikasi', NotificationController::class);
         Route::post('/notifikasi/{notification}/send', [AdminController::class, 'notificationSend'])->name('notifikasi.send');
-        });
+
+        Route::resource('struktural', StrukturalController::class)->except(['show', 'edit', 'update']);
+        Route::patch('struktural/{struktural}/activate', [StrukturalController::class, 'activate'])->name('struktural.activate');
+    });
     Route::get('/pegawai/export', [EmployeeController::class, 'export'])->name('pegawai.export');
     Route::get('/pegawai/pdf-kgb', [EmployeeController::class, 'exportPdfKgb'])->name('pegawai.kgb.pdf');
     Route::get('/pegawai/pdf-pensiun', [EmployeeController::class, 'exportPdfPensiun'])->name('pegawai.pensiun.pdf');

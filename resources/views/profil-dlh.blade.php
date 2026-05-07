@@ -78,48 +78,71 @@
  
         {{-- 4. STRUKTUR ORGANISASI (Urutan Linear sesuai instruksi) --}}
         <section class="py-20 px-6">
-            <div class="max-w-4xl mx-auto flex flex-col items-center">
-                <h2 class="text-3xl font-black uppercase mb-16 text-center">Struktur <span class="text-emerald-600">Organisasi</span></h2>
-                
+            <div class="max-w-7xl mx-auto flex flex-col items-center">
+                <h2 class="text-3xl font-black mb-16 text-center">Struktur Organisasi</h2>
+                <div class="relative group">
+                    @if($struktural)
+                        <div class="overflow-hidden rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 p-2">
+                            <img 
+                                src="{{ asset('storage/' . $struktural->photo_path) }}" 
+                                alt="Struktur Organisasi DLH" 
+                                class="w-full h-auto rounded-xl shadow-inner object-contain"
+                            >
+                        </div>
+                        
+                        {{-- Keterangan Opsional --}}
+                        @if($struktural->keterangan)
+                            <p class="text-center mt-4 text-sm text-zinc-500 italic">
+                                "{{ $struktural->keterangan }}"
+                            </p>
+                        @endif
+                    @else
+                        {{-- Tampilan Fallback jika data kosong --}}
+                        <div class="flex flex-col items-center justify-center py-20 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl">
+                            <flux:icon.user-group class="w-16 h-16 text-zinc-300 mb-4" />
+                            <p class="text-zinc-500 font-medium">Bagan struktur organisasi belum tersedia.</p>
+                        </div>
+                    @endif
+                </div>
                 {{-- Kepala Dinas --}}
-                <div class="w-full max-w-sm p-6 bg-emerald-700 text-white rounded-2xl shadow-xl text-center border-b-8 border-emerald-900">
+                {{-- <div class="w-full max-w-sm p-6 bg-emerald-700 text-white rounded-2xl shadow-xl text-center border-b-8 border-emerald-900">
                     <p class="text-[10px] font-black uppercase tracking-[0.3em] opacity-70 mb-1">Pimpinan Utama</p>
                     <p class="font-black text-xl">KEPALA DINAS</p>
-                </div>
+                </div> --}}
 
-                <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div>
+                {{-- <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div> --}}
 
                 {{-- Sekretaris --}}
-                <div class="w-full max-w-sm p-5 bg-white dark:bg-zinc-800 border-2 border-emerald-600 rounded-2xl text-center shadow-lg">
+                {{-- <div class="w-full max-w-sm p-5 bg-white dark:bg-zinc-800 border-2 border-emerald-600 rounded-2xl text-center shadow-lg">
                     <p class="text-zinc-900 dark:text-white font-black text-lg">SEKRETARIS</p>
-                </div>
+                </div> --}}
 
-                <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div>
+                {{-- <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div> --}}
 
                 {{-- Kabid Sub Umum & Kepegawaian --}}
-                <div
+                {{-- <div
                     class="w-full max-w-sm p-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl text-center border border-zinc-200 dark:border-zinc-700 mb-4">
                     <p class="font-bold uppercase text-sm">Kabid Sub Umum & Kepegawaian</p>
-                </div>
+                </div> --}}
 
                 {{-- Kabid Keuangan --}}
-                <div class="w-full max-w-sm p-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl text-center border border-zinc-200 dark:border-zinc-700">
+                {{-- <div class="w-full max-w-sm p-4 bg-zinc-100 dark:bg-zinc-800 rounded-xl text-center border border-zinc-200 dark:border-zinc-700">
                     <p class="font-bold uppercase text-sm">Kabid Keuangan</p>
-                </div>
-                <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div>
+                </div> --}}
                 {{-- List Kabid-Kabid Teknis --}}
+                {{-- <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                     <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-600 rounded-lg font-bold text-xs uppercase">Kabid Pelayanan Tata Lingkungan</div>
                     <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-600 rounded-lg font-bold text-xs uppercase">Kabid Pengelolaan Sampah & Limbah</div>
                     <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-600 rounded-lg font-bold text-xs uppercase">Kabid Pengendalian Pencemaran & Kerusakan LH</div>
                     <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-l-4 border-emerald-600 rounded-lg font-bold text-xs uppercase">Kabid Penataan Lingkungan Hidup</div>
                 </div>
-                <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div>
+                <div class="w-1 h-8 bg-zinc-300 dark:bg-zinc-700"></div> --}}
                 {{-- Kepala UPTD --}}
-                <div class="w-full max-w-md p-8 bg-zinc-900 text-white rounded-4xl text-center border-t-4 border-emerald-500 shadow-2xl">
+                {{-- <div class="w-full max-w-md p-8 bg-zinc-900 text-white rounded-4xl text-center border-t-4 border-emerald-500 shadow-2xl">
                     <p class="text-emerald-500 text-[10px] font-black uppercase tracking-[0.4em] mb-2">Unit Pelaksana Teknis</p>
                     <p class="text-xl font-black">KEPALA UPTD PENGELOLAAN SAMPAH</p>
-                </div>
+                </div> --}}
             </div>
         </section>
 

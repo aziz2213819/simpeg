@@ -36,6 +36,10 @@
                         :current="request()->routeIs('notifikasi.index')" wire:navigate>
                         {{ __('Notifikasi') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="rectangle-group" :href="route('struktural.index')"
+                        :current="request()->routeIs('struktural.index')" wire:navigate>
+                        {{ __('Struktural') }}
+                    </flux:sidebar.item>
                 @elseif (auth()->user()->role == 'admin_sampah')
                     <flux:sidebar.item icon="inbox-arrow-down" :href="route('admin.pengaduan.index')"
                         :current="request()->routeIs('admin.pengaduan.index')" wire:navigate>

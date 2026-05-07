@@ -55,7 +55,7 @@
                                     class="block text-[10px] font-black text-zinc-400 dark:text-white uppercase mb-1">Jenis
                                     Sampah</span>
                                 <span
-                                    class="px-3 py-1 bg-white border border-zinc-200 rounded-lg text-sm font-bold text-zinc-800">
+                                    class="px-3 py-1 border border-zinc-200 rounded-lg text-sm font-bold text-zinc-800">
                                     {{ Str::headline($item->tipe_sampah) }}
                                 </span>
                             </div>
@@ -129,7 +129,7 @@
                     {{-- Form Input (Hanya Muncul Untuk Admin Sampah) --}}
                     @auth
                         @if(auth()->user()->is_admin_sampah)
-                            <div class="mt-8 p-6 bg-white border-2 border-emerald-500/20 rounded-2xl shadow-sm">
+                            <div class="mt-8 p-6 border-2 border-emerald-500/20 rounded-2xl shadow-sm">
                                 <h4 class="text-xs font-black text-emerald-600 uppercase tracking-widest mb-4 italic">Kirim
                                     Tanggapan Sebagai Admin</h4>
                                 <form action="{{ route('admin.pengaduan.comment', $item->id) }}" method="POST">

@@ -5,8 +5,11 @@
     <flux:card>
 
         {{-- Header --}}
-        <div class="flex justify-between items-center mb-4">
-            <flux:heading size="lg">Data Pangkat</flux:heading>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+            <div>
+                <flux:heading size="lg">Data Pangkat dan Golongan</flux:heading>
+                <flux:subheading>Kelola data pangkat dan golongan</flux:subheading>
+            </div>
 
             <flux:button wire:click="openCreate">
                 Tambah Pangkat

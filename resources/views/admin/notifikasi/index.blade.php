@@ -7,8 +7,10 @@
         <flux:card>
             {{-- Header & Search Form --}}
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
-
-                <flux:heading size="lg">Data Notifikasi Sistem</flux:heading>
+                <div>
+                    <flux:heading size="lg">Data Notifikasi Sistem</flux:heading>
+                    <flux:subheading>Kelola data notifikasi</flux:subheading>
+                </div>
 
                 {{-- Wrapper Kanan: Berubah jadi tumpuk di HP, berjajar di Layar Besar --}}
                 <div class="flex flex-col sm:flex-row w-full lg:w-auto items-start sm:items-center gap-3">

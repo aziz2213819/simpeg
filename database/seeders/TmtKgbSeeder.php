@@ -165,7 +165,48 @@ class TmtKgbSeeder extends Seeder
             '2026-05-01' => [
                 123  // BAMBANG MUSANTO
             ],
-            '2026-06-01' => [
+            // '2026-06-01' => [
+            //     44,  // ACHMAD SUBAIDI
+            //     120, // MOH. DJUSUP (Di database: MOHAMMAD DJUSUP)
+            //     143, // MOHAMMAD TOHIR
+            //     82,  // SUPRATMAN
+            //     83,  // HOIRUL SOLEH
+            //     71,  // NAAM
+            //     105, // MOH AMIN (Di database: MOH. AMIN)
+            //     155  // SUPARLI
+            // ],
+            // '2026-07-01' => [
+            //     22,  // KURDI, SE
+            //     50,  // HUZAIRI
+            //     113, // MOKKRA
+            //     112, // NORADI
+            //     52   // MOHAMMAD MESTORY
+            // ],
+            // '2026-08-01' => [
+            //     95,  // SUPARDI (1983)
+            //     134  // AMIR MAHMUD
+            // ],
+            // '2026-10-01' => [
+            //     88,  // SATUMAN
+            //     139, // SYAMSUL ARIFIN
+            //     73,  // JUMAIN
+            //     66,  // RIDWAN
+            //     146, // MOHAMMAD ROCHMAN
+            //     138, // MOHAMMAD RA'I
+            //     80,  // MOH. SODIK
+            //     27,  // SAHANA, SE
+            //     106, // SOLIHIN
+            //     74,  // BAMBANG PUJI RAHARJO
+            //     136  // NUR ASIA
+            // ],
+            // '2026-11-01' => [
+            //     137, // HOIRUL YAROH
+            //     8    // SITI SUGIARTI,S.Sos, MM
+            // ],
+            // '2026-12-01' => [
+            //     89   // RIYADI KUSYANTO
+            // ]
+            '2024-06-01' => [
                 44,  // ACHMAD SUBAIDI
                 120, // MOH. DJUSUP (Di database: MOHAMMAD DJUSUP)
                 143, // MOHAMMAD TOHIR
@@ -175,18 +216,18 @@ class TmtKgbSeeder extends Seeder
                 105, // MOH AMIN (Di database: MOH. AMIN)
                 155  // SUPARLI
             ],
-            '2026-07-01' => [
+            '2024-07-01' => [
                 22,  // KURDI, SE
                 50,  // HUZAIRI
                 113, // MOKKRA
                 112, // NORADI
                 52   // MOHAMMAD MESTORY
             ],
-            '2026-08-01' => [
+            '2024-08-01' => [
                 95,  // SUPARDI (1983)
                 134  // AMIR MAHMUD
             ],
-            '2026-10-01' => [
+            '2024-10-01' => [
                 88,  // SATUMAN
                 139, // SYAMSUL ARIFIN
                 73,  // JUMAIN
@@ -199,11 +240,11 @@ class TmtKgbSeeder extends Seeder
                 74,  // BAMBANG PUJI RAHARJO
                 136  // NUR ASIA
             ],
-            '2026-11-01' => [
+            '2024-11-01' => [
                 137, // HOIRUL YAROH
                 8    // SITI SUGIARTI,S.Sos, MM
             ],
-            '2026-12-01' => [
+            '2024-12-01' => [
                 89   // RIYADI KUSYANTO
             ]
         ];

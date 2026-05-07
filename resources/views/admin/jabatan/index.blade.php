@@ -6,7 +6,10 @@
 
         {{-- Header & Search Bar --}}
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            <flux:heading size="lg">Data Jabatan</flux:heading>
+            <div>
+                <flux:heading size="lg">Data Jabatan</flux:heading>
+                <flux:subheading>Kelola data jabatan</flux:subheading>
+            </div>
 
             <div class="flex w-full sm:w-auto items-center gap-2">
                 {{-- Input Pencarian Real-time Livewire --}}

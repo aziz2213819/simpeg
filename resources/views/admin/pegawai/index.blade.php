@@ -9,7 +9,10 @@
             <div class="flex flex-col gap-4 mb-4">
 
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <flux:heading size="lg">Data Pegawai</flux:heading>
+                    <div>
+                        <flux:heading size="lg">Data Pegawai</flux:heading>
+                        <flux:subheading>Kelola data pegawai</flux:subheading>
+                    </div>
                     <div class="flex flex-wrap items-center gap-2">
                         <form action="{{ route('pegawai.export') }}" method="GET">
                             <input type="hidden" name="rank_grade_id" value="{{ request('rank_grade_id') }}">
