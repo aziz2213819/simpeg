@@ -68,16 +68,16 @@ class NotificationService
                     continue;
                 }
 
-                if ($type === 'pangkat') {
-                    $nextRank = $this->promotionService->getNextRank($employee->rank_grade_id);
-                    if (!$nextRank) {
-                        continue;
-                    }
-                    $nextGol = $this->promotionService->getGolongan($nextRank);
-                    if (!$this->promotionService->canPromote($employee, $nextGol)) {
-                        continue;
-                    }
-                }
+                // if ($type === 'pangkat') {
+                    // $nextRank = $this->promotionService->getNextRank($employee->rank_grade_id);
+                    // if (!$nextRank) {
+                    //     continue;
+                    // }
+                    // $nextGol = $this->promotionService->getGolongan($nextRank);
+                    // if (!$this->promotionService->canPromote($employee, $nextGol)) {
+                    //     continue;
+                    // }
+                // }
 
                 foreach ($schedules as $schedule) {
                     $triggerDate = $targetDate->copy()->{$schedule['method']}($schedule['value']);

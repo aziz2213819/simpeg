@@ -95,7 +95,7 @@
                                 </flux:button>
 
                                 <flux:modal.trigger name="delete-notif-{{ $notif->id }}">
-                                    <flux:button size="sm" variant="danger">Hapus</flux:button>
+                                    <flux:button size="sm" variant="danger" class="cursor-pointer">Hapus</flux:button>
                                 </flux:modal.trigger>
 
                                 {{-- Modal Konfirmasi Hapus --}}
@@ -113,7 +113,7 @@
                                                 <flux:modal.close>
                                                     <flux:button variant="ghost">Batal</flux:button>
                                                 </flux:modal.close>
-                                                <flux:button type="submit" variant="danger">Ya, Hapus</flux:button>
+                                                <flux:button type="submit" variant="danger" class="cursor-pointer">Ya, Hapus</flux:button>
                                             </div>
                                         </div>
                                     </form>
