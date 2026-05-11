@@ -55,7 +55,7 @@
                                     class="block text-[10px] font-black text-zinc-400 dark:text-white uppercase mb-1">Jenis
                                     Sampah</span>
                                 <span
-                                    class="px-3 py-1 border border-zinc-200 rounded-lg text-sm font-bold text-zinc-800">
+                                    class="px-3 py-1 border border-zinc-200 rounded-lg text-sm font-bold text-zinc-800 dark:text-white">
                                     {{ Str::headline($item->tipe_sampah) }}
                                 </span>
                             </div>

@@ -147,10 +147,6 @@ class NotificationService
             case 'pangkat':
                 // Kelipatan 4 Tahun dari TMT
                 if (!$employee->tmt_start) return null;
-                // if($employee->nip == "199412102025042002") {
-                //     dump($this->promotionService->getNextTargetDate($employee));
-                //     dd($employee->tmt_start);
-                // }
                 return $this->promotionService->getNextTargetDate($employee);
                 
             case 'gaji_berkala':

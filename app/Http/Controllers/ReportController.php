@@ -65,7 +65,6 @@ class ReportController extends Controller
      */
     public function show(Report $pengaduan)
     {
-        dd($pengaduan);
         // Eager load relasi agar performa lebih cepat dan data muncul.
         // comments.user diasumsikan agar Anda bisa menampilkan siapa yang memberi tanggapan.
         $pengaduan->load(['user', 'comments.user']);
