@@ -68,16 +68,16 @@ class NotificationService
                     continue;
                 }
 
-                if ($type === 'pangkat') {
-                    $nextRank = $this->promotionService->getNextRank($employee->rank_grade_id);
-                    if (!$nextRank) {
-                        continue;
-                    }
-                    $nextGol = $this->promotionService->getGolongan($nextRank);
-                    if (!$this->promotionService->canPromote($employee, $nextGol)) {
-                        continue;
-                    }
-                }
+                // if ($type === 'pangkat') {
+                    // $nextRank = $this->promotionService->getNextRank($employee->rank_grade_id);
+                    // if (!$nextRank) {
+                    //     continue;
+                    // }
+                    // $nextGol = $this->promotionService->getGolongan($nextRank);
+                    // if (!$this->promotionService->canPromote($employee, $nextGol)) {
+                    //     continue;
+                    // }
+                // }
 
                 foreach ($schedules as $schedule) {
                     $triggerDate = $targetDate->copy()->{$schedule['method']}($schedule['value']);
@@ -147,10 +147,6 @@ class NotificationService
             case 'pangkat':
                 // Kelipatan 4 Tahun dari TMT
                 if (!$employee->tmt_start) return null;
-                // if($employee->nip == "199412102025042002") {
-                //     dump($this->promotionService->getNextTargetDate($employee));
-                //     dd($employee->tmt_start);
-                // }
                 return $this->promotionService->getNextTargetDate($employee);
                 
             case 'gaji_berkala':

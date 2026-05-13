@@ -33,7 +33,7 @@
 
                 {{-- Konten Laporan --}}
                 <div class="mb-8">
-                    <p class="text-zinc-700 text-lg leading-relaxed italic mb-6">
+                    <p class="text-zinc-700 dark:text-white text-lg leading-relaxed italic mb-6">
                         "{{ $item->deskripsi }}"
                     </p>
 
@@ -55,7 +55,7 @@
                                     class="block text-[10px] font-black text-zinc-400 dark:text-white uppercase mb-1">Jenis
                                     Sampah</span>
                                 <span
-                                    class="px-3 py-1 border border-zinc-200 rounded-lg text-sm font-bold text-zinc-800">
+                                    class="px-3 py-1 border border-zinc-200 rounded-lg text-sm font-bold text-zinc-800 dark:text-white">
                                     {{ Str::headline($item->tipe_sampah) }}
                                 </span>
                             </div>
@@ -114,7 +114,7 @@
                                         {{ $comment->user->name ?? 'Admin DLH Bangkalan' }}
                                     </span>
                                     <span
-                                        class="text-[10px] text-zinc-400">{{ $comment->created_at->diffForHumans() }}</span>
+                                        class="text-[14px] text-zinc-400">{{ $comment->created_at->diffForHumans() }}</span>
                                 </div>
                                 <p class="text-sm text-zinc-700 leading-relaxed">{{ $comment->body }}</p>
                             </div>

@@ -308,7 +308,7 @@
             }, 300);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('livewire:navigated', () => {
             document.querySelectorAll('.btn-load-map').forEach(button => {
                 button.addEventListener('click', () => {
                     loadMap(button.dataset.reportId, button.dataset.latitude, button.dataset.longitude);
