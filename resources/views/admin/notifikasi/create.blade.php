@@ -16,7 +16,7 @@
                     <option value="">-- Pilih Pegawai --</option>
                     @foreach($employees as $employee)
                         <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
-                            {{ $employee->name }} (NIP: {{ $employee->nip ?? '-' }})
+                            {{ $employee->name }}
                         </option>
                     @endforeach
                 </flux:select>

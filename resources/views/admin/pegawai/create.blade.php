@@ -18,8 +18,8 @@
                         Biodata Pribadi
                     </legend>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input name="nip" label="NIP" placeholder="Masukkan 18 digit NIP" value="{{ old('nip') }}"
-                            minlength="18" maxlength="18" required />
+                        {{-- <flux:input name="nip" label="NIP" placeholder="Masukkan 18 digit NIP" value="{{ old('nip') }}"
+                            minlength="18" maxlength="18" required /> --}}
 
                         <flux:input name="name" label="Nama Lengkap (Beserta Gelar)" placeholder="Budi Santoso, S.Kom."
                             value="{{ old('name') }}" required />

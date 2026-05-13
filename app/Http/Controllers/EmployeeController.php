@@ -133,11 +133,26 @@ class EmployeeController extends Controller
                 'rank_grade_id' => $validatedData['rank_grade_id'] ?? null,
             ]);
 
+            // 1. Pisahkan nama berdasarkan tanda koma, dan ambil bagian pertamanya saja (index 0)
+            // "ACHMAD SIDDIK, SAP, MM" -> menjadi "ACHMAD SIDDIK"
+            $nameWithoutTitle = explode(',', $validatedData['name'])[0];
+
+            // 2. Bersihkan nama HANYA dari karakter selain huruf (menghapus spasi, titik, kutip, dll)
+            // "MOH. YAMIN" -> menjadi "mohyamin"
+            // "ACHMAD SIDDIK" -> menjadi "achmadsiddik"
+            $cleanName = strtolower(preg_replace('/[^a-zA-Z]/', '', $nameWithoutTitle));
+
+            // 3. Ambil tahun lahir (contoh: 1985)
+            $birthYear = date('Y', strtotime($validatedData['birth_date']));
+
+            // 4. Gabungkan agar unik
+            $uniqueUsername = $cleanName . $birthYear;
+
             User::create([
                 'name'          => $validatedData['name'],
                 'employee_id'   => $employee->id,
-                'email'         => "{$employee->nip}@gmail.com",
-                'password'      => bcrypt($employee->nip),
+                'email'         => "{$uniqueUsername}@gmail.com",
+                'password'      => bcrypt('dlhbangkalan564738'), 
             ]);
         });
 

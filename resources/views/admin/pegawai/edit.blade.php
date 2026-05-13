@@ -20,8 +20,8 @@
                     <legend class="text-sm font-semibold  mb-4 border-b pb-2 w-full dark:text-white">1. Biodata Pribadi
                     </legend>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input name="nip" label="NIP" value="{{ old('nip', $pegawai->nip) }}" required
-                            minlength="18" maxlength="18" />
+                        {{-- <flux:input name="nip" label="NIP" value="{{ old('nip', $pegawai->nip) }}" required
+                            minlength="18" maxlength="18" /> --}}
 
                         <flux:input name="name" label="Nama Lengkap (Beserta Gelar)"
                             value="{{ old('name', $pegawai->name) }}" required />
