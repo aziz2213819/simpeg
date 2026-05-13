@@ -11,10 +11,12 @@ class NotificationService
 {
 
     protected PromotionService $promotionService;
+    protected PensiunService $pensiunService;
 
-    public function __construct(PromotionService $promotionService)
+    public function __construct(PromotionService $promotionService, PensiunService $pensiunService)
     {
         $this->promotionService = $promotionService;
+        $this->pensiunService = $pensiunService;
     }
 
     // Pemetaan jadwal spesifik untuk masing-masing tipe notifikasi
@@ -62,7 +64,7 @@ class NotificationService
 
             foreach ($this->typeSchedules as $type => $schedules) {
 
-                $targetDate = $this->calculateTargetDate($employee, $type, $now);
+                $targetDate = $this->calculateTargetDate($employee, $type);
 
                 if (!$targetDate) {
                     continue;
@@ -141,7 +143,7 @@ class NotificationService
     /**
      * "OTAK" LOGIKA: Menghitung target tanggal berdasarkan aturan masing-masing tipe
      */
-    private function calculateTargetDate(Employee $employee, string $type, Carbon $now)
+    private function calculateTargetDate(Employee $employee, string $type)
     {
         switch ($type) {
             case 'pangkat':
@@ -161,7 +163,7 @@ class NotificationService
                 if (!$employee->birth_date) return null;
                 
                 $bday = Carbon::parse($employee->birth_date)->startOfDay();
-                $umurPensiun = 60;
+                $umurPensiun = $this->pensiunService->getPensiunNumber($employee);
                 return $bday->copy()->addYears($umurPensiun);
 
             default:

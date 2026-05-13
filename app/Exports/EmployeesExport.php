@@ -36,7 +36,6 @@ class EmployeesExport implements FromCollection, WithHeadings, ShouldAutoSize
             return [
                 'NO' => $e->id,
                 'NAMA' => $e->name,
-                'NIP' => "'" . $e->nip,
                 'PANGKAT/GOL' => $e->rankGrade->rank_name . ' / ' . $e->rankGrade->grade_code,
                 'TMT PANGKAT' => $e->tmt_start,
                 "JABATAN" => $e->position->position_name,
@@ -50,7 +49,6 @@ class EmployeesExport implements FromCollection, WithHeadings, ShouldAutoSize
         return [
             'NO',
             'NAMA',
-            'NIP',
             'PANGKAT/GOL',
             'TMT PANGKAT',
             "JABATAN",

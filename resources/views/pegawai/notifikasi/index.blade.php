@@ -13,10 +13,10 @@
             <flux:heading size="2xl" class="text-white mb-4">{{ $employee->name }}</flux:heading>
 
             <div class="flex flex-wrap gap-4 text-sm mt-4">
-                <div class="flex items-center gap-1.5 bg-emerald-700/50 px-3 py-1.5 rounded-md">
+                {{-- <div class="flex items-center gap-1.5 bg-emerald-700/50 px-3 py-1.5 rounded-md">
                     <flux:icon.identification class="w-4 h-4 text-emerald-300" />
                     <span>NIP. {{ $employee->nip ?? '-' }}</span>
-                </div>
+                </div> --}}
                 <div class="flex items-center gap-1.5 bg-emerald-700/50 px-3 py-1.5 rounded-md">
                     <flux:icon.briefcase class="w-4 h-4 text-emerald-300" />
                     <span>{{ $employee->type }} ({{ $employee->gender == 'l' ? 'Laki-laki' : 'Perempuan' }})</span>

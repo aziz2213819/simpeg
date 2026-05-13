@@ -55,7 +55,7 @@
                     </div>
                 </fieldset>
 
-                {{-- SECTION 3: Status & Jabatan --}}
+                {{-- SECTION 2: Status & Jabatan --}}
                 <fieldset>
                     <legend class="text-sm font-semibold text-zinc-700 dark:text-white mb-4 border-b pb-2 w-full">2.
                         Status &
@@ -77,7 +77,7 @@
                             <option value="Non ASN" {{ old('type') == 'Non ASN' ? 'selected' : '' }}>Non ASN</option>
                         </flux:select>
 
-                        <flux:input type="date" name="tmt_start" label="TMT Awal (Mulai Tugas)"
+                        <flux:input type="date" name="tmt_start" label="TMT Pangkat Awal (Mulai Tugas)"
                             value="{{ old('tmt_start') }}" required />
 
                         <flux:input id="tmt_akhir" type="date" name="tmt_end"

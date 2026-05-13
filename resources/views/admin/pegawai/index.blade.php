@@ -79,9 +79,10 @@
                 <flux:table>
                     <flux:table.columns>
                         <flux:table.column>Nama</flux:table.column>
-                        <flux:table.column>NIP</flux:table.column>
-                        <flux:table.column>Tipe</flux:table.column> <flux:table.column>Gender</flux:table.column>
-                        <flux:table.column>TMT</flux:table.column>
+                        <flux:table.column>Tanggal Lahir</flux:table.column>
+                        <flux:table.column>Tipe</flux:table.column>
+                        <flux:table.column>Jenis Kelamin</flux:table.column>
+                        <flux:table.column>TMT Pangkat</flux:table.column>
                             <flux:table.column class="text-right">Aksi</flux:table.column>
                     </flux:table.columns>
 
@@ -92,7 +93,7 @@
                                     </flux:table.cell>
 
                                     <flux:table.cell>
-                                        {{ $employee->nip }}
+                                        {{ $employee->birth_date ? \Carbon\Carbon::parse($employee->birth_date)->format('d-m-Y') : '-' }}
                                     </flux:table.cell>
 
                                     <flux:table.cell>

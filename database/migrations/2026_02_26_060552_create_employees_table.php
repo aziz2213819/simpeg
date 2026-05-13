@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('nip')->unique();
+            // $table->string('nip')->unique();
             $table->string('name');
             $table->date('birth_date');
             $table->enum('gender', ['l', 'p'])->default('l');
             $table->enum('status', ['active', 'nonactive'])->default('active');
-            $table->enum('education_level', ['SD', 'SMP', 'SMA', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'])->nullable();
+            $table->enum('education_level', ['SD', 'SMP', 'SMA', 'SMK', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3'])->nullable();
             $table->string('education_detail')->nullable();
             $table->date('tmt_start')->default(now());
             $table->date('tmt_end')->nullable();

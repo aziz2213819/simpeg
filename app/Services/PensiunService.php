@@ -23,10 +23,12 @@ class PensiunService
         }
     }
 
+
     private function isEligible($employee, $now)
     {
         $birth = Carbon::parse($employee->birth_date)->startOfDay();
-        $retirementDate = $birth->copy()->addYears(60);
+        $yearPensiun = $this->getPensiunNumber($employee);
+        $retirementDate = $birth->copy()->addYears($yearPensiun);
         return $now->gte($retirementDate);
     }
 
@@ -37,7 +39,7 @@ class PensiunService
         ]);
     }
 
-    private function getPensiunNumber($employee)
+    public function getPensiunNumber($employee)
     {
         $specialPositionIds = [1, 10];
         if (in_array($employee->position_id, $specialPositionIds)) {

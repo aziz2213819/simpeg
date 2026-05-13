@@ -129,7 +129,7 @@ class PromotionService
         $level = $employee->education_level;
         $rules = [
             1 => ['SD','SMP'],
-            2 => ['SMA','D1','D2','D3','D4','S1','S2','S3'],
+            2 => ['SMA', 'SMK','D1','D2','D3','D4','S1','S2','S3'],
             3 => ['D4','S1','S2','S3'],
             4 => ['S2','S3'],
         ];
