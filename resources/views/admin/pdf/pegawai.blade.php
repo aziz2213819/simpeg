@@ -122,7 +122,7 @@
         <thead>
             <tr>
                 <th>NO</th>
-                <th>NAMA / NIP</th>
+                <th>NAMA</th>
                 <th>GOLONGAN</th>
                 <th>JABATAN</th>
                 <th>KETERANGAN</th>
@@ -133,8 +133,7 @@
                 <tr>
                     <td>{{ $i + 1 }}</td>
                     <td class="left">
-                        {{ $e->name }} <br>
-                        NIP: {{ $e->nip }}
+                        {{ $e->name }}
                     </td>
                     <td>
                         {{ $e->rankGrade?->rank_name ?? '-' }} <br>

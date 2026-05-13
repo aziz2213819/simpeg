@@ -30,7 +30,7 @@ class PositionSeeder extends Seeder
             // ========================
             // FUNGSIONAL
             // ========================
-            ['name' => 'Perencana Ahli Pertama', 'type' => 'fungsional'],
+            ['name' => 'Ahli Pertama - Perencana', 'type' => 'fungsional'],
             ['name' => 'Penyuluh Lingkungan Ahli Pertama', 'type' => 'fungsional'],
             ['name' => 'Pengendali Dampak Lingkungan Ahli Pertama', 'type' => 'fungsional'],
             ['name' => 'Pengendali Dampak Lingkungan Ahli Muda', 'type' => 'fungsional'],

@@ -20,8 +20,8 @@
                     <legend class="text-sm font-semibold  mb-4 border-b pb-2 w-full dark:text-white">1. Biodata Pribadi
                     </legend>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <flux:input name="nip" label="NIP" value="{{ old('nip', $pegawai->nip) }}" required
-                            minlength="18" maxlength="18" />
+                        {{-- <flux:input name="nip" label="NIP" value="{{ old('nip', $pegawai->nip) }}" required
+                            minlength="18" maxlength="18" /> --}}
 
                         <flux:input name="name" label="Nama Lengkap (Beserta Gelar)"
                             value="{{ old('name', $pegawai->name) }}" required />
@@ -59,7 +59,7 @@
                     </div>
                 </fieldset>
 
-                {{-- SECTION 3: Status & Jabatan --}}
+                {{-- SECTION 2: Status & Jabatan --}}
                 <fieldset>
                     <legend class="text-sm font-semibold text-gray-700 mb-4 border-b pb-2 w-full dark:text-white">2.
                         Status &
@@ -80,7 +80,7 @@
                             <option value="Non ASN" {{ old('type') == 'Non ASN' ? 'selected' : '' }}>Non ASN</option>
                         </flux:select>
 
-                        <flux:input type="date" name="tmt_start" label="TMT Awal (Mulai Tugas)"
+                        <flux:input type="date" name="tmt_start" label="TMT Pangkat Awal (Mulai Tugas)"
                             value="{{ old('tmt_start', \Carbon\Carbon::parse($pegawai->tmt_start)->format('Y-m-d')) }}"
                             required />
 

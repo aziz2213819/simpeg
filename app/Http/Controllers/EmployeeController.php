@@ -70,7 +70,7 @@ class EmployeeController extends Controller
             // 'password'      => 'required|min:8',
 
             // Validasi Biodata (Employees)
-            'nip'           => 'required|string|digits:18|unique:employees,nip',
+            // 'nip'           => 'required|string|digits:18|unique:employees,nip',
             'name'          => 'required|string|max:255',
             'birth_date'    => 'required|date',
             'gender'        => 'required|in:l,p',
@@ -118,7 +118,7 @@ class EmployeeController extends Controller
         // 5. Simpan Data (Gunakan DB Transaction karena ada 2 tabel)
         DB::transaction(function () use ($validatedData) {
             $employee = Employee::create([
-                'nip'           => $validatedData['nip'],
+                // 'nip'           => $validatedData['nip'],
                 'name'          => $validatedData['name'],
                 'birth_date'    => $validatedData['birth_date'],
                 'gender'        => $validatedData['gender'],
@@ -133,11 +133,26 @@ class EmployeeController extends Controller
                 'rank_grade_id' => $validatedData['rank_grade_id'] ?? null,
             ]);
 
+            // 1. Pisahkan nama berdasarkan tanda koma, dan ambil bagian pertamanya saja (index 0)
+            // "ACHMAD SIDDIK, SAP, MM" -> menjadi "ACHMAD SIDDIK"
+            $nameWithoutTitle = explode(',', $validatedData['name'])[0];
+
+            // 2. Bersihkan nama HANYA dari karakter selain huruf (menghapus spasi, titik, kutip, dll)
+            // "MOH. YAMIN" -> menjadi "mohyamin"
+            // "ACHMAD SIDDIK" -> menjadi "achmadsiddik"
+            $cleanName = strtolower(preg_replace('/[^a-zA-Z]/', '', $nameWithoutTitle));
+
+            // 3. Ambil tahun lahir (contoh: 1985)
+            $birthYear = date('Y', strtotime($validatedData['birth_date']));
+
+            // 4. Gabungkan agar unik
+            $uniqueUsername = $cleanName . $birthYear;
+
             User::create([
                 'name'          => $validatedData['name'],
                 'employee_id'   => $employee->id,
-                'email'         => "{$employee->nip}@gmail.com",
-                'password'      => bcrypt($employee->nip),
+                'email'         => "{$uniqueUsername}@gmail.com",
+                'password'      => bcrypt('dlhbangkalan564738'), 
             ]);
         });
 
@@ -171,7 +186,7 @@ class EmployeeController extends Controller
         $rules = [
             // 'email'         => 'required|email|unique:users,email,' . ($user ? $user->id : ''),
             // 'password'      => 'nullable|min:8',
-            'nip'           => 'required|string|digits:18|unique:employees,nip,' . $pegawai->id,
+            // 'nip'           => 'required|string|digits:18|unique:employees,nip,' . $pegawai->id,
             'name'          => 'required|string|max:255',
             'birth_date'    => 'required|date',
             'gender'        => 'required|in:l,p',
@@ -197,7 +212,7 @@ class EmployeeController extends Controller
         ];
 
         $attributes = [
-            'nip'           => 'NIP',
+            // 'nip'           => 'NIP',
             'name'          => 'Nama',
             'birth_date'    => 'Tanggal Lahir',
             'gender'        => 'Jenis Kelamin',
@@ -214,7 +229,7 @@ class EmployeeController extends Controller
         DB::transaction(function () use ($validatedData, $pegawai) {
             // 1. Update Biodata Pegawai
             $pegawai->update([
-                'nip'           => $validatedData['nip'],
+                // 'nip'           => $validatedData['nip'],
                 'name'          => $validatedData['name'],
                 'birth_date'    => $validatedData['birth_date'],
                 'gender'        => $validatedData['gender'],
@@ -262,7 +277,7 @@ class EmployeeController extends Controller
         $now = now();
         // $now = Carbon::parse('2026-04-01'); // untuk test
 
-        $target = $now->copy()->addMonths(2);
+        $target = $now->copy()->addMonths(2)->subYears(2);
 
         $employees = Employee::with(['rankGrade', 'position'])
             ->whereNotNull('tmt_kgb')

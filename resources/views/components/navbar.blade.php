@@ -38,7 +38,7 @@
                     Login
                 </flux:button>
 
-                <flux:button href="{{ route('pengaduan.create') }}" variant="primary">
+                <flux:button href="{{ route('pengaduan.create') }}" variant="primary" class="bg-emerald-600 px-8 dark:text-white">
                     Lapor
                 </flux:button>
             @endauth
