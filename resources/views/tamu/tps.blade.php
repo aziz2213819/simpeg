@@ -4,13 +4,14 @@
     <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            {{-- KOLOM KIRI: DAFTAR TPS & FILTER --}}
+            {{-- KOLOM KIRI: DAFTAR TPS & FILTER (4 Kolom) --}}
             <div class="lg:col-span-5 space-y-4">
                 
-                {{-- Baris Judul & Filter SEJAJAR (Hemat Tempat) --}}
+                {{-- Baris Judul & Filter Sejajar --}}
                 <div class="flex items-center justify-between gap-4 mb-2">
                     <h2 class="text-lg font-bold text-zinc-800 dark:text-zinc-100 whitespace-nowrap">Daftar Titik TPS</h2>
                     
+                    {{-- Form Filter Mepet Kanan --}}
                     <form action="{{ route('tamu.tps') }}" method="GET" class="flex items-center gap-1">
                         <flux:select name="kecamatan" placeholder="Kecamatan" class="!w-32 !h-9">
                             <option value="">Semua</option>
@@ -25,9 +26,8 @@
                 {{-- List Card TPS --}}
                 <div class="space-y-3 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
                     @forelse($all_tps as $tps)
-                        <flux:card class="p-4 cursor-pointer hover:ring-2 hover:ring-emerald-500 transition-all shadow-sm border-zinc-200 dark:border-zinc-800 group tps-card" 
-                                   data-lat="{{ $tps->lat }}" 
-                                   data-lng="{{ $tps->lng }}">
+                        <flux:card class="p-4 cursor-pointer hover:ring-2 hover:ring-emerald-500 transition-all shadow-sm border-zinc-200 dark:border-zinc-800 group" 
+                                   onclick="focusTPS({{ $tps->lat }}, {{ $tps->lng }})">
                             <div class="flex flex-col">
                                 <div class="flex justify-between items-start mb-1">
                                     <h3 class="text-sm font-black text-zinc-900 dark:text-white uppercase group-hover:text-emerald-600">
@@ -55,73 +55,52 @@
                 </div>
             </div>
 
-            {{-- KOLOM KANAN: PETA --}}
+            {{-- KOLOM KANAN: PETA (7 Kolom) --}}
             <div class="lg:col-span-7">
                 <flux:card class="p-1 shadow-2xl ring-1 ring-zinc-200 dark:ring-zinc-800 border-none overflow-hidden">
                     <div id="map-warga" style="width: 100%; height: 600px; border-radius: 10px; z-index: 1;"></div>
                 </flux:card>
+                <p class="mt-2 text-[10px] text-zinc-400 italic text-right">* Klik marker untuk navigasi Google Maps</p>
             </div>
 
         </div>
     </div>
 
-    {{-- Script & Leaflet Assets --}}
+    {{-- Script & Leaflet --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        // Gunakan fungsi tunggal untuk inisialisasi agar tidak duplikat saat navigasi Livewire
-        function initMap() {
+        let mapWarga;
+        function initTpsMap() {
             const container = document.getElementById('map-warga');
-            if (!container || container._leaflet_id) return; // Cegah re-inisialisasi
+            if (!container || L.DomUtil.hasClass(container, 'leaflet-container')) return;
 
-            const mapWarga = L.map('map-warga', { 
-                scrollWheelZoom: false, 
-                attributionControl: false 
-            }).setView([-7.0454, 112.7441], 13);
+            mapWarga = L.map('map-warga', { scrollWheelZoom: false, attributionControl: false }).setView([-7.0454, 112.7441], 13);
+            L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0','mt1','mt2','mt3'] }).addTo(mapWarga);
 
-            L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { 
-                maxZoom: 20, 
-                subdomains: ['mt0','mt1','mt2','mt3'] 
-            }).addTo(mapWarga);
-
-            // Mapping data dari Blade ke format JSON aman untuk JavaScript
-            const locations = @json($all_tps->map(fn($t) => [
-                'lat' => $t->lat,
-                'lng' => $t->lng,
-                'nama' => strtoupper($t->nama_tps)
-            ]));
-
-            locations.forEach(loc => {
-                if (loc.lat && loc.lng) {
-                    L.marker([loc.lat, loc.lng]).addTo(mapWarga).bindPopup(`
+            @foreach($all_tps as $tps)
+                @if($tps->lat && $tps->lng)
+                    L.marker([{{ $tps->lat }}, {{ $tps->lng }}]).addTo(mapWarga).bindPopup(`
                         <div style="min-width: 150px;">
-                            <h4 style="margin:0; color:#10b981; font-size:12px;">${loc.nama}</h4>
+                            <h4 style="margin:0; color:#10b981; font-size:12px;">{{ strtoupper($tps->nama_tps) }}</h4>
                             <hr style="margin:5px 0; border:0; border-top:1px solid #eee;">
-                            <a href="https://www.google.com/maps?q=${loc.lat},${loc.lng}" target="_blank" 
+                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ $tps->lat }},{{ $tps->lng }}" target="_blank" 
                                style="display:block; background:#10b981; color:white; text-align:center; padding:5px; border-radius:4px; text-decoration:none; font-size:10px; font-weight:bold;">
                                NAVIGASI
                             </a>
                         </div>
                     `);
-                }
-            });
-
-            // Klik Card -> Fokus Peta
-            document.querySelectorAll('.tps-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const lat = this.dataset.lat;
-                    const lng = this.dataset.lng;
-                    if(lat && lng) {
-                        mapWarga.flyTo([lat, lng], 18, { animate: true, duration: 1.5 });
-                    }
-                });
-            });
+                @endif
+            @endforeach
         }
 
-        // Jalankan saat load pertama & saat navigasi Livewire (PENTING UNTUK HOSTING)
-        document.addEventListener('DOMContentLoaded', initMap);
-        document.addEventListener('livewire:navigated', initMap);
+        function focusTPS(lat, lng) {
+            if (mapWarga) mapWarga.flyTo([lat, lng], 18, { animate: true, duration: 1.5 });
+        }
+
+        document.addEventListener('DOMContentLoaded', initTpsMap);
+        document.addEventListener('livewire:navigated', initTpsMap);
     </script>
 
     <style>

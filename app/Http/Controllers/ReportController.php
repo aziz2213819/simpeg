@@ -7,12 +7,83 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
+// Import Manager dan Driver untuk Intervention Image V3
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ReportController extends Controller
 {
     /**
-     * Menampilkan daftar semua pengaduan (Sisi Dashboard Admin)
-     * Digunakan untuk memanajemen laporan oleh petugas.
+     * SISI WARGA: Menyimpan pengaduan baru dari Landing Page/Portal.
+     * Menggunakan Intervention Image V3 untuk kompresi.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama_pelapor'  => 'required|string|max:100',
+            'tipe_sampah'   => 'required|in:organik,anorganik,b3,lainnya',
+            'deskripsi'     => 'required|string|max:1000',
+            'lokasi_manual' => 'nullable|string|max:255',
+            'lat'           => 'required|numeric',
+            'lng'           => 'required|numeric',
+            'foto_bukti'    => 'required|image|max:10240', 
+        ]);
+
+        try {
+            $fotoPath = null;
+
+            if ($request->hasFile('foto_bukti')) {
+                $file = $request->file('foto_bukti');
+                $filename = time() . '_' . Str::random(10) . '.jpg';
+                
+                if (!Storage::disk('public')->exists('reports')) {
+                    Storage::disk('public')->makeDirectory('reports');
+                }
+
+                // --- PROSES KOMPRESI (VERSI 3) ---
+                // 1. Inisialisasi Manager dengan Driver GD
+                $manager = new ImageManager(new Driver());
+                
+                // 2. Baca file gambar
+                $image = $manager->read($file->getRealPath());
+                
+                // 3. Resize lebar ke 800px (skala otomatis)
+                $image->scale(width: 800);
+
+                // 4. Encode ke format JPG dengan kualitas 70%
+                $encoded = $image->toJpeg(70);
+
+                // 5. Simpan ke storage
+                Storage::disk('public')->put('reports/' . $filename, (string) $encoded);
+                
+                $fotoPath = 'reports/' . $filename;
+            }
+
+            $trackingId = 'TRK-' . date('Ymd') . '-' . strtoupper(Str::random(5));
+
+            Report::create([
+                'tracking_id'   => $trackingId,
+                'nama_pelapor'  => $request->nama_pelapor,
+                'tipe_sampah'   => $request->tipe_sampah,
+                'deskripsi'     => $request->deskripsi,
+                'lokasi_manual' => $request->lokasi_manual,
+                'lat'           => round($request->lat, 8),
+                'lng'           => round($request->lng, 8),
+                'foto_bukti'    => $fotoPath,
+                'status'        => 'pending',
+            ]);
+
+            return redirect()->back()->with('success', 'Laporan berhasil dikirim! ID Tracking: ' . $trackingId);
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengirim laporan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * SISI ADMIN: Menampilkan daftar semua pengaduan.
      */
     public function index(Request $request)
     {
@@ -35,7 +106,7 @@ class ReportController extends Controller
             ->when($type, function ($query, $type) {
                 return $query->where('tipe_sampah', $type);
             })
-            ->withCount('comments') // Menghitung jumlah komentar otomatis (kolom virtual: comments_count)
+            ->withCount('comments') 
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -44,37 +115,28 @@ class ReportController extends Controller
     }
 
     /**
-     * Menampilkan daftar pengaduan (Sisi Portal Warga / Landing Page)
-     * Method ini digunakan untuk menampilkan transparansi ke masyarakat.
+     * SISI PORTAL: Menampilkan daftar pengaduan (Public).
      */
     public function portal()
     {
-        // Mengambil semua data pengaduan untuk ditampilkan di landing page.
-        // withCount('comments') wajib ada agar variabel $item->comments_count tersedia di Blade.
         $allReports = Report::withCount('comments')
             ->latest()
             ->get();
         
-        // Pastikan 'welcome' adalah nama file blade portal/landing page Anda.
         return view('welcome', compact('allReports')); 
     }
 
     /**
-     * Menampilkan detail pengaduan dan diskusi komentar.
-     * Menggunakan Route Model Binding (Report $pengaduan).
+     * ADMIN: Detail Pengaduan.
      */
     public function show(Report $pengaduan)
     {
-        // Eager load relasi agar performa lebih cepat dan data muncul.
-        // comments.user diasumsikan agar Anda bisa menampilkan siapa yang memberi tanggapan.
         $pengaduan->load(['user', 'comments.user']);
-        
-        // Dikirim sebagai 'item' agar sesuai dengan kodingan Blade Anda sebelumnya.
         return view('admin.pengaduan.show', ['item' => $pengaduan]);
     }
 
     /**
-     * Menyimpan komentar/tanggapan baru dari Admin.
+     * ADMIN: Kirim Komentar.
      */
     public function storeComment(Request $request, Report $pengaduan)
     {
@@ -82,19 +144,17 @@ class ReportController extends Controller
             'body' => 'required|string|max:1000',
         ]);
 
-        // Simpan komentar ke database.
-        // Pastikan foreign key di database Anda adalah 'report_id'.
         Comment::create([
             'report_id' => $pengaduan->id,
-            'user_id'   => Auth::id(), // ID Admin/Petugas yang sedang login
+            'user_id'   => Auth::id(), 
             'body'      => $request->body,
         ]);
 
-        return back()->with('success', 'Tanggapan berhasil dikirim ke publik!');
+        return back()->with('success', 'Tanggapan berhasil dikirim!');
     }
 
     /**
-     * Memperbarui status laporan (Pending/Proses/Selesai).
+     * ADMIN: Update Status.
      */
     public function updateStatus(Request $request, Report $pengaduan)
     {
@@ -106,28 +166,24 @@ class ReportController extends Controller
             'status' => $request->status
         ]);
         
-        return back()->with('success', 'Status laporan #' . $pengaduan->tracking_id . ' diperbarui menjadi ' . $request->status);
+        return back()->with('success', 'Status diperbarui.');
     }
 
     /**
-     * Menghapus data laporan pengaduan beserta file fotonya.
+     * ADMIN: Hapus Laporan.
      */
     public function destroy(Report $pengaduan)
     {
         try {
-            // 1. Hapus file foto dari storage jika ada untuk menghemat kapasitas server.
             if ($pengaduan->foto_bukti && Storage::disk('public')->exists($pengaduan->foto_bukti)) {
                 Storage::disk('public')->delete($pengaduan->foto_bukti);
             }
 
-            // 2. Hapus data laporan.
-            // Jika migration Anda menggunakan onDelete('cascade'), komentar akan terhapus otomatis.
             $pengaduan->delete();
-
-            return redirect()->route('admin.pengaduan.index')->with('success', 'Laporan berhasil dihapus secara permanen.');
+            return redirect()->route('admin.pengaduan.index')->with('success', 'Laporan dihapus.');
             
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menghapus laporan: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghapus laporan.');
         }
     }
 }

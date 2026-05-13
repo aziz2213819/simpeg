@@ -1,5 +1,6 @@
 <x-layouts::app.landing :title="__('Profil Lengkap DLH')">
     <x-navbar />
+
     <div class="w-full min-h-screen text-zinc-900 dark:text-zinc-100 pt-12">
         <x-heading-dlh />
         
@@ -42,7 +43,7 @@
                 <h2 class="text-3xl font-black uppercase border-b-4 border-emerald-600 inline-block">Misi</h2>
                 <ul class="space-y-4">
                     @foreach([
-                        'Meningkatkan pengawasan and pengendalian pencemaran lingkungan.',
+                        'Meningkatkan pengawasan dan pengendalian pencemaran lingkungan.',
                         'Mengoptimalkan sistem pengelolaan sampah berbasis masyarakat.',
                         'Meningkatkan kualitas ruang terbuka hijau dan keanekaragaman hayati.',
                         'Mendorong partisipasi aktif masyarakat dalam pelestarian lingkungan.'
@@ -71,33 +72,45 @@
             </div>
         </section>
 
-        {{-- 4. STRUKTUR ORGANISASI (VERSI UPLOAD OTOMATIS) --}}
+        {{-- 4. STRUKTUR ORGANISASI (UPLOAD OTOMATIS) --}}
         <section class="py-20 px-6">
             <div class="max-w-7xl mx-auto flex flex-col items-center">
-                <h2 class="text-3xl font-black mb-16 text-center">Struktur Organisasi</h2>
-                <div class="relative group w-full flex justify-center">
-                    @if($struktural)
-                        <div class="overflow-hidden rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 p-2 max-w-5xl">
-                            <img 
-                                src="{{ asset('storage/' . $struktural->photo_path) }}" 
-                                alt="Struktur Organisasi DLH" 
-                                class="w-full h-auto rounded-xl shadow-inner object-contain"
-                            >
+                <h2 class="text-3xl font-black mb-16 text-center uppercase tracking-tight">Struktur Organisasi</h2>
+                
+                <div class="w-full flex justify-center">
+                    @if($struktural && $struktural->photo_path)
+                        <div class="relative group max-w-5xl w-full flex flex-col items-center">
+                            <div class="overflow-hidden rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 p-2">
+                                <img 
+                                    src="{{ asset('storage/' . $struktural->photo_path) }}" 
+                                    alt="Struktur Organisasi DLH" 
+                                    class="w-full h-auto rounded-xl object-contain"
+                                    onerror="this.src='https://placehold.co/1200x800?text=Gambar+Struktur+Tidak+Ditemukan'"
+                                >
+                            </div>
+                            
+                            @if($struktural->keterangan)
+                                <div class="mt-8 p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 rounded-2xl">
+                                    <p class="text-center text-sm md:text-md text-emerald-800 dark:text-emerald-400 font-medium italic">
+                                        "{{ $struktural->keterangan }}"
+                                    </p>
+                                </div>
+                            @endif
                         </div>
-                        
-                        @if($struktural->keterangan)
-                            <p class="text-center mt-4 text-sm text-zinc-500 italic">
-                                "{{ $struktural->keterangan }}"
-                            </p>
-                        @endif
                     @else
-                        <div class="flex flex-col items-center justify-center py-20 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl w-full max-w-3xl">
-                            <p class="text-zinc-500 font-medium">Bagan struktur organisasi belum diunggah.</p>
+                        {{-- Tampilan jika data gambar belum diupload di admin --}}
+                        <div class="flex flex-col items-center justify-center py-24 border-4 border-dashed border-zinc-200 dark:border-zinc-800 rounded-3xl w-full max-w-3xl">
+                            <svg class="w-20 h-20 text-zinc-300 dark:text-zinc-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="text-zinc-500 font-bold text-lg">Bagan struktur organisasi belum tersedia.</p>
+                            <p class="text-zinc-400 text-sm mt-1">Silakan unggah melalui panel admin.</p>
                         </div>
                     @endif
                 </div>
             </div>
         </section>
     </div>
+
     <x-footer />
 </x-layouts::app.landing>
